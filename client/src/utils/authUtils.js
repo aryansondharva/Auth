@@ -1,8 +1,25 @@
 // Utility functions for authentication
+import axios from 'axios';
 
 export const clearAuthData = () => {
-  localStorage.removeItem('token');
-  delete axios.defaults.headers.common['Authorization'];
+  console.log('Clearing auth data...');
+  
+  try {
+    // Clear localStorage
+    localStorage.removeItem('token');
+    
+    // Clear axios headers
+    delete axios.defaults.headers.common['Authorization'];
+    
+    // Clear any other auth-related data
+    localStorage.removeItem('user');
+    sessionStorage.clear();
+    
+    console.log('Auth data cleared successfully');
+  } catch (error) {
+    console.error('Error clearing auth data:', error);
+    // Continue with logout even if clearing fails
+  }
 };
 
 export const isTokenExpired = (token) => {

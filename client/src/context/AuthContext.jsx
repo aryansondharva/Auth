@@ -141,9 +141,34 @@ export const AuthProvider = ({ children }) => {
 
   // Logout user
   const logout = () => {
-    clearAuthData();
-    dispatch({ type: LOGOUT });
-    toast.success('Logged out successfully');
+    console.log('Logout function called');
+    console.log('Before logout - isAuthenticated:', state.isAuthenticated);
+    console.log('Before logout - user:', state.user);
+    
+    try {
+      // Clear all auth data first
+      clearAuthData();
+      
+      // Force logout state immediately
+      dispatch({ type: LOGOUT });
+      
+      console.log('After logout - isAuthenticated:', state.isAuthenticated);
+      console.log('After logout - user:', state.user);
+      
+      // Show success message
+      toast.success('Logged out successfully');
+      
+      // Immediate redirect to signin page
+      window.location.href = '/signin';
+    } catch (error) {
+      console.error('Logout error:', error);
+      toast.error('Error logging out');
+      
+      // Fallback - force logout anyway
+      clearAuthData();
+      dispatch({ type: LOGOUT });
+      window.location.href = '/signin';
+    }
   };
 
   // Load user from token
