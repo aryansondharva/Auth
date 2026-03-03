@@ -87,10 +87,10 @@ const SignIn = () => {
         <div className="glass-morphism p-8">
           {/* Header */}
           <div className="text-center mb-8">
-            <h1 className={`text-3xl font-bold mb-2 ${isLightMode ? 'text-black' : 'text-zinc-100'}`}>
+            <h1 className={`text-3xl font-bold mb-2 ${isLightMode ? 'text-black' : 'text-white'}`}>
               Welcome Back
             </h1>
-            <p className={`mb-6 ${isLightMode ? 'text-black' : 'text-zinc-400'}`}>
+            <p className={`mb-6 ${isLightMode ? 'text-black' : 'text-zinc-300'}`}>
               Sign in to your account to continue
             </p>
           </div>
@@ -99,7 +99,7 @@ const SignIn = () => {
           <form onSubmit={handleSubmit} className="space-y-6">
             {/* Email Field */}
             <div>
-              <label htmlFor="email" className={`block text-sm font-medium mb-2 ${isLightMode ? 'text-black' : 'text-zinc-300'}`}>
+              <label htmlFor="email" className={`block text-sm font-medium mb-2 ${isLightMode ? 'text-black' : 'text-zinc-200'}`}>
                 Email Address
               </label>
               <div className="relative">
@@ -123,7 +123,7 @@ const SignIn = () => {
 
             {/* Password Field */}
             <div>
-              <label htmlFor="password" className={`block text-sm font-medium mb-2 ${isLightMode ? 'text-black' : 'text-zinc-300'}`}>
+              <label htmlFor="password" className={`block text-sm font-medium mb-2 ${isLightMode ? 'text-black' : 'text-zinc-200'}`}>
                 Password
               </label>
               <div className="relative">
@@ -155,7 +155,7 @@ const SignIn = () => {
 
             {/* Remember Me & Forgot Password */}
             <div className="flex items-center justify-between">
-              <label className={`flex items-center space-x-2 text-sm ${isLightMode ? 'text-black' : 'text-zinc-300'}`}>
+              <label className={`flex items-center space-x-2 text-sm ${isLightMode ? 'text-black' : 'text-zinc-200'}`}>
                 <input
                   type="checkbox"
                   name="remember"
@@ -169,7 +169,7 @@ const SignIn = () => {
               
               <Link
                 to="/forgot-password"
-                className={`transition-colors text-sm ${isLightMode ? 'text-black hover:text-zinc-700' : 'text-zinc-400 hover:text-zinc-200'}`}
+                className={`transition-colors text-sm ${isLightMode ? 'text-black hover:text-zinc-700' : 'text-zinc-300 hover:text-zinc-100'}`}
                 onClick={(e) => {
                   e.preventDefault();
                   // TODO: Implement forgot password functionality
@@ -229,11 +229,11 @@ const SignIn = () => {
 
           {/* Footer */}
           <div className="mt-8 text-center">
-            <p className="text-zinc-400">
+            <p className={isLightMode ? 'text-black' : 'text-zinc-300'}>
               Don't have an account?{' '}
               <Link
                 to="/signup"
-                className="text-zinc-100 hover:text-zinc-300 transition-colors font-medium"
+                className={`transition-colors font-medium ${isLightMode ? 'text-black hover:text-zinc-700' : 'text-white hover:text-zinc-200'}`}
               >
                 Sign Up
               </Link>
