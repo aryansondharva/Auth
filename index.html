@@ -1,0 +1,541 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=yes">
+    <title>immersive login · register · social</title>
+    <!-- Font Awesome 6 (free) for clean icons + google/github -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <!-- Google Font for modern, airy type -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;14..32,400;14..32,500;14..32,600;14..32,700&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Inter', system-ui, -apple-system, sans-serif;
+        }
+
+        body {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: radial-gradient(circle at 10% 30%, #1a1f2e, #0b0d17 80%);
+            padding: 1rem;
+            position: relative;
+            overflow-x: hidden;
+        }
+
+        /* immersive animated background — subtle moving orbs */
+        body::before {
+            content: '';
+            position: absolute;
+            width: 150%;
+            height: 150%;
+            top: -25%;
+            left: -25%;
+            background: radial-gradient(circle at 30% 40%, rgba(64, 123, 255, 0.15) 0%, transparent 35%),
+                        radial-gradient(circle at 80% 70%, rgba(192, 132, 252, 0.12) 0%, transparent 40%),
+                        radial-gradient(circle at 20% 80%, rgba(255, 140, 200, 0.08) 0%, transparent 45%);
+            animation: slowDrift 28s infinite alternate ease-in-out;
+            z-index: 0;
+        }
+
+        @keyframes slowDrift {
+            0% { transform: translate(0, 0) rotate(0deg); }
+            100% { transform: translate(-5%, -3%) rotate(2deg); }
+        }
+
+        /* main card – frosted glass, immersive depth */
+        .auth-container {
+            position: relative;
+            z-index: 10;
+            width: 100%;
+            max-width: 500px;
+            background: rgba(18, 22, 36, 0.65);
+            backdrop-filter: blur(14px) saturate(180%);
+            -webkit-backdrop-filter: blur(14px) saturate(180%);
+            border-radius: 3rem 2rem 3rem 2rem;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            box-shadow: 0 30px 60px -10px rgba(0, 0, 0, 0.8), 0 0 0 1px rgba(255, 255, 255, 0.03) inset;
+            padding: 2.5rem 2rem;
+            transition: transform 0.2s ease, box-shadow 0.3s ease;
+            color: #edf2fb;
+        }
+
+        .auth-container:hover {
+            box-shadow: 0 40px 70px -8px #000000cc, 0 0 0 1px rgba(255, 255, 255, 0.1) inset;
+            transform: scale(1.005);
+        }
+
+        /* toggle switch (login / register) – intuitive */
+        .form-toggler {
+            display: flex;
+            gap: 1rem;
+            background: rgba(0, 0, 0, 0.35);
+            padding: 0.5rem;
+            border-radius: 4rem;
+            border: 1px solid rgba(255,255,255,0.05);
+            margin-bottom: 2.5rem;
+            backdrop-filter: blur(4px);
+        }
+
+        .toggle-btn {
+            flex: 1;
+            text-align: center;
+            padding: 0.9rem 0.5rem;
+            border-radius: 3rem;
+            font-weight: 600;
+            font-size: 1.2rem;
+            letter-spacing: 0.5px;
+            background: transparent;
+            border: none;
+            color: #a0aec0;
+            cursor: pointer;
+            transition: all 0.25s cubic-bezier(0.2, 0.9, 0.3, 1.2);
+            box-shadow: inset 0 0 0 0 rgba(255,255,255,0.1);
+        }
+
+        .toggle-btn.active {
+            background: rgba(255, 255, 255, 0.95);
+            color: #0b0f1c;
+            box-shadow: 0 10px 20px -8px #1e293b, 0 0 20px rgba(255,255,255,0.3);
+            cursor: default;
+        }
+
+        /* forms – both initially hidden, shown via JS */
+        .form-panel {
+            display: none;
+            animation: fadeSlide 0.5s ease;
+        }
+
+        .form-panel.active-panel {
+            display: block;
+        }
+
+        @keyframes fadeSlide {
+            0% { opacity: 0.2; transform: translateY(12px); }
+            100% { opacity: 1; transform: translateY(0); }
+        }
+
+        /* headings & immersive details */
+        .form-panel h2 {
+            font-size: 2.2rem;
+            font-weight: 600;
+            margin-bottom: 0.25rem;
+            background: linear-gradient(to right, #ffffff, #cbd5ff);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            letter-spacing: -0.5px;
+        }
+
+        .sub {
+            color: #a6b3cf;
+            margin-bottom: 2rem;
+            font-size: 0.95rem;
+            border-left: 3px solid #4f7df3;
+            padding-left: 1rem;
+        }
+
+        /* input groups – modern minimalist */
+        .input-group {
+            margin-bottom: 1.6rem;
+            position: relative;
+        }
+
+        .input-group i {
+            position: absolute;
+            left: 18px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #8e9fd8;
+            font-size: 1.3rem;
+            opacity: 0.8;
+            pointer-events: none;
+            transition: opacity 0.2s;
+        }
+
+        .input-group input {
+            width: 100%;
+            background: rgba(10, 14, 23, 0.7);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 2.5rem;
+            padding: 1.2rem 1.2rem 1.2rem 3.4rem;
+            font-size: 1.1rem;
+            font-weight: 400;
+            color: white;
+            outline: none;
+            transition: all 0.2s ease;
+            backdrop-filter: blur(5px);
+            box-shadow: inset 0 5px 8px rgba(0,0,0,0.4);
+        }
+
+        .input-group input:focus {
+            border-color: #628af8;
+            background: rgba(20, 28, 45, 0.9);
+            box-shadow: 0 0 0 4px rgba(98, 138, 248, 0.25), inset 0 2px 8px #000;
+        }
+
+        .input-group input::placeholder {
+            color: #6f7da0;
+            font-weight: 300;
+            font-size: 1rem;
+        }
+
+        /* extra row (remember me / forgot) */
+        .row-actions {
+            display: flex;
+            flex-wrap: wrap;
+            align-items: center;
+            justify-content: space-between;
+            margin: 1rem 0 2rem;
+            font-size: 0.95rem;
+        }
+
+        .checkbox {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            color: #bac2db;
+        }
+
+        .checkbox input {
+            accent-color: #4f7df3;
+            width: 1.1rem;
+            height: 1.1rem;
+            cursor: pointer;
+        }
+
+        .forgot-link {
+            color: #afc0ff;
+            text-decoration: none;
+            border-bottom: 1px dashed #4b70c0;
+            transition: 0.15s;
+        }
+
+        .forgot-link:hover {
+            color: white;
+            border-bottom-style: solid;
+        }
+
+        /* main CTA button */
+        .primary-btn {
+            width: 100%;
+            background: linear-gradient(135deg, #4f7df3, #7c5cf0);
+            border: none;
+            padding: 1.2rem 1rem;
+            border-radius: 3rem;
+            font-weight: 700;
+            font-size: 1.4rem;
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 12px;
+            box-shadow: 0 18px 30px -12px #2e3d8c, 0 4px 10px rgba(0,0,0,0.4);
+            cursor: pointer;
+            transition: all 0.2s ease;
+            margin-top: 0.8rem;
+        }
+
+        .primary-btn i {
+            font-size: 1.3rem;
+        }
+
+        .primary-btn:hover {
+            background: linear-gradient(135deg, #628af8, #8f74f5);
+            transform: scale(1.02);
+            box-shadow: 0 22px 35px -10px #4255b0;
+        }
+
+        .primary-btn:active {
+            transform: scale(0.98);
+        }
+
+        /* separator — "or continue with" */
+        .divider {
+            display: flex;
+            align-items: center;
+            text-align: center;
+            margin: 2rem 0 1.8rem;
+            color: #8d9bc2;
+            font-size: 0.95rem;
+        }
+
+        .divider::before,
+        .divider::after {
+            content: '';
+            flex: 1;
+            border-bottom: 1px solid rgba(255,255,255,0.15);
+        }
+
+        .divider span {
+            margin: 0 1rem;
+            letter-spacing: 0.3px;
+        }
+
+        /* social login row — github + google */
+        .social-row {
+            display: flex;
+            gap: 1.2rem;
+            justify-content: center;
+        }
+
+        .social-btn {
+            flex: 1;
+            background: rgba(25, 30, 45, 0.7);
+            backdrop-filter: blur(8px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            padding: 1rem 0.5rem;
+            border-radius: 3rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 12px;
+            font-size: 1.2rem;
+            font-weight: 500;
+            color: #e6edff;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            box-shadow: 0 8px 20px -10px #04070f;
+        }
+
+        .social-btn i {
+            font-size: 1.9rem;
+        }
+
+        .social-btn .fa-github {
+            color: #f0f3fa;
+        }
+
+        .social-btn .fa-google {
+            background: linear-gradient(45deg, #ea4335, #fbbc05, #34a853, #4285f4);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            color: #fff; /* fallback, but we use gradient text */
+            -webkit-text-fill-color: transparent;
+        }
+
+        .social-btn:hover {
+            background: rgba(45, 55, 80, 0.8);
+            border-color: rgba(255, 255, 255, 0.25);
+            transform: translateY(-2px);
+        }
+
+        /* register-specific extra text */
+        .terms {
+            margin-top: 2rem;
+            font-size: 0.85rem;
+            text-align: center;
+            color: #97a6cf;
+        }
+
+        .terms a {
+            color: #c7d6ff;
+            text-decoration: none;
+            font-weight: 600;
+            border-bottom: 1px dotted;
+        }
+
+        .terms a:hover {
+            color: white;
+        }
+
+        /* tiny responsive extra touch */
+        @media (max-width: 450px) {
+            .auth-container {
+                padding: 2rem 1.2rem;
+                border-radius: 2.2rem 1.5rem 2.2rem 1.5rem;
+            }
+            .toggle-btn {
+                font-size: 1rem;
+                padding: 0.7rem 0.2rem;
+            }
+            .primary-btn {
+                font-size: 1.2rem;
+                padding: 1rem;
+            }
+            .social-btn span {
+                display: none; /* keep icons only on very small */
+            }
+            .social-btn i {
+                font-size: 2rem;
+            }
+        }
+
+        /* direct login simulation (just ux, no backend) */
+        .note-ux {
+            text-align: center;
+            margin-top: 1rem;
+            font-size: 0.8rem;
+            color: #57648b;
+        }
+    </style>
+</head>
+<body>
+    <div class="auth-container">
+        <!-- toggle login / register -->
+        <div class="form-toggler" role="tablist">
+            <button class="toggle-btn active" id="btnLoginTab" data-panel="loginPanel">log in</button>
+            <button class="toggle-btn" id="btnRegisterTab" data-panel="registerPanel">register</button>
+        </div>
+
+        <!-- LOGIN PANEL -->
+        <div id="loginPanel" class="form-panel active-panel">
+            <h2>welcome back</h2>
+            <div class="sub">immersive · secure · instant</div>
+
+            <div class="input-group">
+                <i class="fas fa-envelope"></i>
+                <input type="email" placeholder="Email or username" id="loginEmail" value="demo@user.com">
+            </div>
+            <div class="input-group">
+                <i class="fas fa-lock"></i>
+                <input type="password" placeholder="Password" id="loginPassword" value="••••••••">
+            </div>
+
+            <div class="row-actions">
+                <label class="checkbox">
+                    <input type="checkbox" checked> keep me immersed
+                </label>
+                <a href="#" class="forgot-link">forgot?</a>
+            </div>
+
+            <button class="primary-btn" id="loginMainBtn"><i class="fas fa-arrow-right-to-bracket"></i> log in</button>
+
+            <div class="divider"><span>or continue with</span></div>
+
+            <div class="social-row">
+                <button class="social-btn" id="githubLoginBtn"><i class="fab fa-github"></i> <span>GitHub</span></button>
+                <button class="social-btn" id="googleLoginBtn"><i class="fab fa-google"></i> <span>Google</span></button>
+            </div>
+            <div class="note-ux"><i class="fa-regular fa-circle-check"></i> direct login simulation (demo flow)</div>
+        </div>
+
+        <!-- REGISTER PANEL -->
+        <div id="registerPanel" class="form-panel">
+            <h2>create account</h2>
+            <div class="sub">join the immersive experience</div>
+
+            <div class="input-group">
+                <i class="fas fa-user"></i>
+                <input type="text" placeholder="Full name" id="regName" value="Alex Rivera">
+            </div>
+            <div class="input-group">
+                <i class="fas fa-envelope"></i>
+                <input type="email" placeholder="Email" id="regEmail" value="hello@avocado.dev">
+            </div>
+            <div class="input-group">
+                <i class="fas fa-lock"></i>
+                <input type="password" placeholder="Password" id="regPassword" value="newpass123">
+            </div>
+            <div class="input-group">
+                <i class="fas fa-lock"></i>
+                <input type="password" placeholder="Confirm password" id="regConfirm" value="newpass123">
+            </div>
+
+            <button class="primary-btn" id="registerMainBtn"><i class="fas fa-user-plus"></i> register</button>
+
+            <div class="divider"><span>or sign up with</span></div>
+
+            <div class="social-row">
+                <button class="social-btn" id="githubRegBtn"><i class="fab fa-github"></i> <span>GitHub</span></button>
+                <button class="social-btn" id="googleRegBtn"><i class="fab fa-google"></i> <span>Google</span></button>
+            </div>
+            <div class="terms">
+                by continuing you agree to our <a href="#">terms</a> & <a href="#">privacy</a>.
+            </div>
+        </div>
+    </div>
+
+    <script>
+        (function() {
+            // Toggle panels (login/register)
+            const loginTab = document.getElementById('btnLoginTab');
+            const registerTab = document.getElementById('btnRegisterTab');
+            const loginPanel = document.getElementById('loginPanel');
+            const registerPanel = document.getElementById('registerPanel');
+
+            function setActivePanel(panelId) {
+                // update tab buttons active class
+                if (panelId === 'loginPanel') {
+                    loginTab.classList.add('active');
+                    registerTab.classList.remove('active');
+                    loginPanel.classList.add('active-panel');
+                    registerPanel.classList.remove('active-panel');
+                } else {
+                    registerTab.classList.add('active');
+                    loginTab.classList.remove('active');
+                    registerPanel.classList.add('active-panel');
+                    loginPanel.classList.remove('active-panel');
+                }
+            }
+
+            loginTab.addEventListener('click', (e) => {
+                e.preventDefault();
+                setActivePanel('loginPanel');
+            });
+
+            registerTab.addEventListener('click', (e) => {
+                e.preventDefault();
+                setActivePanel('registerPanel');
+            });
+
+            // helper for simulation (just immersive alert)
+            function simulateLogin(provider, mode = 'login') {
+                let msg = `[${provider}] `;
+                if (mode === 'login') {
+                    msg += 'Login request — you would be redirected. (immersive simulation)';
+                } else {
+                    msg += 'Register / sign-up via ' + provider + ' — direct flow.';
+                }
+                alert('✨ immersive demo ✨\n\n' + msg + '\n\n(no actual backend)');
+            }
+
+            // ---- ALL DIRECT LOGIN BUTTONS (github + google for both panels) ----
+            // login panel github
+            document.getElementById('githubLoginBtn').addEventListener('click', () => simulateLogin('GitHub', 'login'));
+            // login panel google
+            document.getElementById('googleLoginBtn').addEventListener('click', () => simulateLogin('Google', 'login'));
+            // register panel github
+            document.getElementById('githubRegBtn').addEventListener('click', () => simulateLogin('GitHub', 'register'));
+            // register panel google
+            document.getElementById('googleRegBtn').addEventListener('click', () => simulateLogin('Google', 'register'));
+
+            // primary login button (login panel)
+            document.getElementById('loginMainBtn').addEventListener('click', (e) => {
+                e.preventDefault();
+                const email = document.getElementById('loginEmail').value || 'demo@user.com';
+                alert(`✨ immersive login (demo)\nWelcome ${email}\n( seamless authentication simulation )`);
+            });
+
+            // primary register button (register panel)
+            document.getElementById('registerMainBtn').addEventListener('click', (e) => {
+                e.preventDefault();
+                const name = document.getElementById('regName').value || 'Guest';
+                alert(`🎉 immersive registration, ${name}!\nYour account would be created.\n(no data stored — demo purposes)`);
+            });
+
+            // Optional: "forgot" link & others — keep immersive illusion
+            document.querySelectorAll('.forgot-link').forEach(link => {
+                link.addEventListener('click', (e) => {
+                    e.preventDefault();
+                    alert('📬 password reset link would be sent (immersive simulation)');
+                });
+            });
+
+            // terms click simulation
+            document.querySelectorAll('.terms a').forEach(link => {
+                link.addEventListener('click', (e) => {
+                    e.preventDefault();
+                    alert('📄 you would be redirected to terms / privacy (demo)');
+                });
+            });
+        })();
+    </script>
+    <!-- extra micro-interaction: remember checkbox is just ui, but we keep it -->
+</body>
+</html>
