@@ -175,6 +175,19 @@ export const AuthProvider = ({ children }) => {
     loadUser();
   }, []);
 
+  // Update user (for user ID changes)
+  const updateUser = (newUser, newToken) => {
+    localStorage.setItem('token', newToken);
+    setupAxiosInterceptors(newToken, logout);
+    
+    dispatch({
+      type: AUTH_SUCCESS,
+      payload: { user: newUser, token: newToken },
+    });
+    
+    toast.success('User information updated successfully');
+  };
+
   const value = {
     ...state,
     register,
@@ -182,6 +195,7 @@ export const AuthProvider = ({ children }) => {
     logout,
     loadUser,
     setLoading,
+    updateUser,
   };
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;

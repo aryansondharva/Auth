@@ -1,9 +1,11 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { useAuth } from '../context/AuthContext';
-import { User, Mail, Calendar, LogOut, Shield, Settings } from 'lucide-react';
+import { User, Mail, Calendar, LogOut, Shield, Settings, Edit3 } from 'lucide-react';
+import UserIdChangeModal from '../components/UserIdChangeModal';
 
 const Dashboard = () => {
   const { user, logout } = useAuth();
+  const [showUserIdModal, setShowUserIdModal] = useState(false);
 
   const handleLogout = () => {
     logout();
