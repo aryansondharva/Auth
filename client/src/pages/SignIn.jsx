@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import { Eye, EyeOff, Mail, Lock, ArrowRight } from 'lucide-react';
 import LoadingSpinner from '../components/LoadingSpinner';
@@ -15,7 +15,6 @@ const SignIn = () => {
   const [isSubmitting, setIsSubmitting] = useState(false);
 
   const { login, loading } = useAuth();
-  const navigate = useNavigate();
 
   const handleChange = (e) => {
     const { name, value, type, checked } = e.target;
@@ -66,7 +65,7 @@ const SignIn = () => {
       });
 
       if (result.success) {
-        navigate('/dashboard');
+        // Navigation is handled by AuthContext
       }
     } finally {
       setIsSubmitting(false);
@@ -166,11 +165,6 @@ const SignIn = () => {
               <Link
                 to="/forgot-password"
                 className="text-zinc-300 hover:text-zinc-100 transition-colors text-sm"
-                onClick={(e) => {
-                  e.preventDefault();
-                  // TODO: Implement forgot password functionality
-                  alert('Forgot password functionality coming soon!');
-                }}
               >
                 Forgot password?
               </Link>
