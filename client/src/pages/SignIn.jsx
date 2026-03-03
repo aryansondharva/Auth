@@ -17,6 +17,7 @@ const SignIn = () => {
 
   const { login, loading } = useAuth();
   const navigate = useNavigate();
+  const { theme } = useTheme();
 
   const handleChange = (e) => {
     const { name, value, type, checked } = e.target;
@@ -78,16 +79,18 @@ const SignIn = () => {
     return <LoadingSpinner />;
   }
 
+  const isLightMode = theme === 'light';
+
   return (
     <div className="min-h-screen flex items-center justify-center px-4 py-12">
       <div className="w-full max-w-md">
         <div className="glass-morphism p-8">
           {/* Header */}
           <div className="text-center mb-8">
-            <h1 className="text-3xl font-bold text-zinc-100 mb-2 dark:text-black">
+            <h1 className={`text-3xl font-bold mb-2 ${isLightMode ? 'text-black' : 'text-zinc-100'}`}>
               Welcome Back
             </h1>
-            <p className="text-zinc-400 dark:text-black">
+            <p className={`mb-6 ${isLightMode ? 'text-black' : 'text-zinc-400'}`}>
               Sign in to your account to continue
             </p>
           </div>
@@ -96,7 +99,7 @@ const SignIn = () => {
           <form onSubmit={handleSubmit} className="space-y-6">
             {/* Email Field */}
             <div>
-              <label htmlFor="email" className="block text-zinc-300 text-sm font-medium mb-2 dark:text-black">
+              <label htmlFor="email" className={`block text-sm font-medium mb-2 ${isLightMode ? 'text-black' : 'text-zinc-300'}`}>
                 Email Address
               </label>
               <div className="relative">
@@ -120,7 +123,7 @@ const SignIn = () => {
 
             {/* Password Field */}
             <div>
-              <label htmlFor="password" className="block text-zinc-300 text-sm font-medium mb-2 dark:text-black">
+              <label htmlFor="password" className={`block text-sm font-medium mb-2 ${isLightMode ? 'text-black' : 'text-zinc-300'}`}>
                 Password
               </label>
               <div className="relative">
@@ -152,7 +155,7 @@ const SignIn = () => {
 
             {/* Remember Me & Forgot Password */}
             <div className="flex items-center justify-between">
-              <label className="flex items-center space-x-2 text-zinc-300 text-sm dark:text-black">
+              <label className={`flex items-center space-x-2 text-sm ${isLightMode ? 'text-black' : 'text-zinc-300'}`}>
                 <input
                   type="checkbox"
                   name="remember"
@@ -166,7 +169,7 @@ const SignIn = () => {
               
               <Link
                 to="/forgot-password"
-                className="text-zinc-400 hover:text-zinc-200 transition-colors text-sm dark:text-black dark:hover:text-zinc-700"
+                className={`transition-colors text-sm ${isLightMode ? 'text-black hover:text-zinc-700' : 'text-zinc-400 hover:text-zinc-200'}`}
                 onClick={(e) => {
                   e.preventDefault();
                   // TODO: Implement forgot password functionality
