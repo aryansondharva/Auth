@@ -1,4 +1,4 @@
-import React, { useState, useRef } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import { Camera, X, Upload, User } from 'lucide-react';
 
 const ProfilePhotoUploadModal = ({ isOpen, onClose, currentPhoto, onPhotoUpdate }) => {
@@ -7,6 +7,15 @@ const ProfilePhotoUploadModal = ({ isOpen, onClose, currentPhoto, onPhotoUpdate 
   const [uploading, setUploading] = useState(false);
   const [error, setError] = useState('');
   const fileInputRef = useRef(null);
+
+  // Reset state when modal closes
+  useEffect(() => {
+    if (!isOpen) {
+      setSelectedFile(null);
+      setPreview(null);
+      setError('');
+    }
+  }, [isOpen]);
 
   const handleFileSelect = (event) => {
     const file = event.target.files[0];

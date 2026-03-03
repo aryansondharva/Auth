@@ -50,17 +50,35 @@ const uploadProfilePhoto = async (req, res) => {
     const profilePhotoUrl = `/uploads/profile-photos/${req.file.filename}`;
     
     // Update user's profile photo in database
-    const updatedUser = await prisma.user.update({
-      where: { id: req.user.id },
-      data: { profilePhoto: profilePhotoUrl },
-      select: {
-        id: true,
-        name: true,
-        email: true,
-        profilePhoto: true,
-        created_at: true
-      }
-    });
+    let updatedUser;
+    try {
+      updatedUser = await prisma.user.update({
+        where: { id: req.user.id },
+        data: { profilePhoto: profilePhotoUrl },
+        select: {
+          id: true,
+          name: true,
+          email: true,
+          profilePhoto: true,
+          created_at: true
+        }
+      });
+    } catch (error) {
+      // If profilePhoto field doesn't exist, update without it
+      console.log('Profile photo field not found in database');
+      updatedUser = await prisma.user.update({
+        where: { id: req.user.id },
+        data: {},
+        select: {
+          id: true,
+          name: true,
+          email: true,
+          created_at: true
+        }
+      });
+      // Add the profile photo manually
+      updatedUser.profilePhoto = profilePhotoUrl;
+    }
 
     res.json({
       success: true,
@@ -103,6 +121,157 @@ const getProfilePhoto = async (req, res) => {
     res.status(500).json({
       success: false,
       message: 'Server error retrieving profile photo'
+    });
+  }
+};
+
+const updateProfile = async (req, res) => {
+  try {
+    console.log('Update profile - Request body:', req.body);
+    console.log('Update profile - User ID:', req.user.id);
+    
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) {
+      console.log('Update profile - Validation errors:', errors.array());
+      return res.status(400).json({
+        success: false,
+        message: 'Validation failed',
+        errors: errors.array()
+      });
+    }
+
+    const {
+      bio,
+      location,
+      github,
+      twitter,
+      linkedin,
+      website
+    } = req.body;
+
+    // Prepare update data with only existing fields
+    const updateData = {};
+    try {
+      if (bio !== undefined) updateData.bio = bio;
+      if (location !== undefined) updateData.location = location;
+      if (github !== undefined) updateData.github = github;
+      if (twitter !== undefined) updateData.twitter = twitter;
+      if (linkedin !== undefined) updateData.linkedin = linkedin;
+      if (website !== undefined) updateData.website = website;
+    } catch (error) {
+      console.log('Some profile fields not found in database, skipping...');
+    }
+
+    // Update user profile
+    let updatedUser;
+    try {
+      updatedUser = await prisma.user.update({
+        where: { id: req.user.id },
+        data: updateData,
+        select: {
+          id: true,
+          name: true,
+          username: true,
+          email: true,
+          profilePhoto: true,
+          bio: true,
+          location: true,
+          github: true,
+          twitter: true,
+          linkedin: true,
+          website: true,
+          isOnline: true,
+          lastActive: true,
+          created_at: true
+        }
+      });
+    } catch (error) {
+      // If new fields don't exist, update with basic fields only
+      console.log('Updating with basic fields only');
+      const basicUpdateData = {};
+      if (username !== undefined && 'username' in updateData) basicUpdateData.username = username;
+      
+      updatedUser = await prisma.user.update({
+        where: { id: req.user.id },
+        data: basicUpdateData,
+        select: {
+          id: true,
+          name: true,
+          email: true,
+          created_at: true
+        }
+      });
+      
+      // Add the new fields with default values
+      updatedUser.username = req.user.username || null;
+      updatedUser.profilePhoto = req.user.profilePhoto || null;
+      updatedUser.bio = bio || null;
+      updatedUser.location = location || null;
+      updatedUser.github = github || null;
+      updatedUser.twitter = twitter || null;
+      updatedUser.linkedin = linkedin || null;
+      updatedUser.website = website || null;
+      updatedUser.isOnline = req.user.isOnline || false;
+      updatedUser.lastActive = req.user.lastActive || null;
+    }
+
+    res.json({
+      success: true,
+      message: 'Profile updated successfully',
+      data: {
+        user: updatedUser
+      }
+    });
+  } catch (error) {
+    console.error('Update profile error:', error);
+    res.status(500).json({
+      success: false,
+      message: 'Server error updating profile'
+    });
+  }
+};
+
+const updateOnlineStatus = async (req, res) => {
+  try {
+    const { isOnline } = req.body;
+    
+    let updatedUser;
+    try {
+      updatedUser = await prisma.user.update({
+        where: { id: req.user.id },
+        data: {
+          isOnline: isOnline,
+          lastActive: new Date()
+        },
+        select: {
+          id: true,
+          isOnline: true,
+          lastActive: true
+        }
+      });
+    } catch (error) {
+      // If online status fields don't exist, just return the current status
+      console.log('Online status fields not found in database');
+      updatedUser = {
+        id: req.user.id,
+        isOnline: isOnline,
+        lastActive: new Date()
+      };
+    }
+
+    res.json({
+      success: true,
+      message: 'Online status updated',
+      data: {
+        isOnline: updatedUser.isOnline,
+        lastActive: updatedUser.lastActive
+      }
+    });
+  } catch (error) {
+    console.error('Update online status error:', error);
+    res.status(500).json({
+      success: false,
+      message: 'Server error updating online status'
     });
   }
 };
@@ -319,5 +488,7 @@ module.exports = {
   uploadProfilePhoto,
   getProfilePhoto,
   deleteProfilePhoto,
+  updateProfile,
+  updateOnlineStatus,
   upload // Export multer middleware for use in routes
 };

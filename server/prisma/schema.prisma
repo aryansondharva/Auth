@@ -13,9 +13,18 @@ datasource db {
 model User {
   id          String   @id @default(cuid())
   name        String
+  username    String?  @unique
   email       String   @unique
   password    String
   profilePhoto String?  @map("profile_photo") // Optional profile photo URL/path
+  bio         String?  // User bio/tagline
+  location    String?  // User location
+  github      String?  // GitHub username
+  twitter     String?  // Twitter username
+  linkedin    String?  // LinkedIn username
+  website     String?  // Personal website
+  isOnline    Boolean  @default(false) @map("is_online") // Online status
+  lastActive  DateTime? @map("last_active") // Last active timestamp
   created_at  DateTime @default(now()) @map("created_at")
   updated_at  DateTime @updatedAt @map("updated_at")
 

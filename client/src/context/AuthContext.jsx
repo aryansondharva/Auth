@@ -1,6 +1,7 @@
 import React, { createContext, useContext, useReducer, useEffect } from 'react';
 import axios from 'axios';
 import toast from 'react-hot-toast';
+import { clearAuthData, isTokenExpired, getAuthToken, setAuthToken } from '../utils/authUtils';
 
 // Create context
 const AuthContext = createContext();
@@ -140,15 +141,14 @@ export const AuthProvider = ({ children }) => {
 
   // Logout user
   const logout = () => {
-    localStorage.removeItem('token');
-    delete axios.defaults.headers.common['Authorization'];
+    clearAuthData();
     dispatch({ type: LOGOUT });
     toast.success('Logged out successfully');
   };
 
   // Load user from token
   const loadUser = async () => {
-    const token = localStorage.getItem('token');
+    const token = getAuthToken();
     
     if (token) {
       setupAxiosInterceptors(token, logout);
@@ -156,13 +156,22 @@ export const AuthProvider = ({ children }) => {
         const response = await axios.get('/api/auth/me');
         const user = response.data.data.user;
         
+        console.log('loadUser - Received user data:', {
+          id: user.id,
+          name: user.name,
+          email: user.email,
+          profilePhoto: user.profilePhoto,
+          username: user.username
+        });
+        
         dispatch({
           type: AUTH_SUCCESS,
           payload: { user, token },
         });
       } catch (error) {
-        localStorage.removeItem('token');
-        delete axios.defaults.headers.common['Authorization'];
+        console.error('Error loading user:', error);
+        // Clear invalid token and dispatch logout
+        clearAuthData();
         dispatch({ type: AUTH_FAIL });
       }
     } else {
@@ -177,12 +186,13 @@ export const AuthProvider = ({ children }) => {
 
   // Update user (for user ID changes)
   const updateUser = (newUser, newToken) => {
-    localStorage.setItem('token', newToken);
-    setupAxiosInterceptors(newToken, logout);
+    if (newToken) {
+      setAuthToken(newToken);
+    }
     
     dispatch({
       type: AUTH_SUCCESS,
-      payload: { user: newUser, token: newToken },
+      payload: { user: newUser, token: newToken || getAuthToken() },
     });
     
     toast.success('User information updated successfully');

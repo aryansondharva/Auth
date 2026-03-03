@@ -11,9 +11,18 @@
 CREATE TABLE IF NOT EXISTS users (
     id VARCHAR(255) PRIMARY KEY,
     name VARCHAR(255) NOT NULL,
+    username VARCHAR(255) UNIQUE,
     email VARCHAR(255) UNIQUE NOT NULL,
     password VARCHAR(255) NOT NULL,
     profile_photo VARCHAR(500), -- Optional profile photo URL/path
+    bio TEXT, -- User bio/tagline
+    location VARCHAR(255), -- User location
+    github VARCHAR(255), -- GitHub username
+    twitter VARCHAR(255), -- Twitter username
+    linkedin VARCHAR(255), -- LinkedIn username
+    website VARCHAR(500), -- Personal website
+    is_online BOOLEAN DEFAULT FALSE, -- Online status
+    last_active TIMESTAMP WITH TIME ZONE, -- Last active timestamp
     created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
     updated_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP
 );

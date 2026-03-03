@@ -1,42 +1,61 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { useAuth } from '../context/AuthContext';
-import { User, Mail, Calendar, LogOut, Shield, Settings, Edit3, Camera } from 'lucide-react';
+import { User, Mail, Calendar, LogOut, Shield, Settings, Edit3, Camera, MapPin, Github, Twitter, Linkedin, Globe, Circle } from 'lucide-react';
 import UserIdChangeModal from '../components/UserIdChangeModal';
 import ProfilePhotoUploadModal from '../components/ProfilePhotoUploadModal';
+import EditProfileModal from '../components/EditProfileModal';
 
 const Dashboard = () => {
   const { user, logout, updateUser } = useAuth();
   const [showUserIdModal, setShowUserIdModal] = useState(false);
   const [showProfilePhotoModal, setShowProfilePhotoModal] = useState(false);
-  const [profilePhotoUrl, setProfilePhotoUrl] = useState(null);
-
-  useEffect(() => {
-    const fetchProfilePhoto = async () => {
-      try {
-        const token = localStorage.getItem('token');
-        const response = await fetch('http://localhost:5000/api/user/profile-photo', {
-          headers: {
-            'Authorization': `Bearer ${token}`
-          }
-        });
-        
-        const data = await response.json();
-        if (data.success && data.data.profilePhoto) {
-          setProfilePhotoUrl(data.data.profilePhoto);
-        }
-      } catch (error) {
-        console.error('Error fetching profile photo:', error);
-      }
-    };
-
-    fetchProfilePhoto();
-  }, []);
+  const [showEditProfileModal, setShowEditProfileModal] = useState(false);
 
   const handleProfilePhotoUpdate = (newPhotoUrl) => {
-    setProfilePhotoUrl(newPhotoUrl);
     // Update user in context if available
     if (updateUser) {
       updateUser({ ...user, profilePhoto: newPhotoUrl });
+    }
+  };
+
+  const handleProfileUpdate = (updatedData) => {
+    // Update user in context if available
+    if (updateUser) {
+      updateUser({ ...user, ...updatedData });
+    }
+  };
+
+  const handleOnlineStatusToggle = async () => {
+    // Update online status
+    const newStatus = !user.isOnline;
+    if (updateUser) {
+      updateUser({ ...user, isOnline: newStatus, lastActive: new Date() });
+    }
+    
+    // Also update on server
+    try {
+      const response = await fetch('http://localhost:5000/api/user/online-status', {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${localStorage.getItem('token')}`
+        },
+        body: JSON.stringify({ isOnline: newStatus })
+      });
+      
+      if (!response.ok) {
+        console.error('Failed to update online status on server');
+        // Revert the local change if server update fails
+        if (updateUser) {
+          updateUser({ ...user, isOnline: !newStatus });
+        }
+      }
+    } catch (error) {
+      console.error('Error updating online status:', error);
+      // Revert the local change if server update fails
+      if (updateUser) {
+        updateUser({ ...user, isOnline: !newStatus });
+      }
     }
   };
 
@@ -58,13 +77,13 @@ const Dashboard = () => {
       <div className="max-w-6xl mx-auto">
         {/* Welcome Section */}
         <div className="glass-morphism p-8 mb-8">
-          <div className="flex flex-col md:flex-row items-center md:items-start space-y-4 md:space-y-0 md:space-x-6">
+          <div className="flex flex-col md:flex-row items-start space-y-6 md:space-y-0 md:space-x-8">
             {/* Avatar */}
-            <div className="relative">
-              <div className="w-24 h-24 bg-zinc-800 rounded-full flex items-center justify-center text-zinc-100 text-3xl font-bold shadow-xl border border-zinc-700 overflow-hidden">
-                {profilePhotoUrl ? (
+            <div className="relative flex-shrink-0">
+              <div className="w-32 h-32 bg-zinc-800 rounded-full flex items-center justify-center text-zinc-100 text-4xl font-bold shadow-xl border border-zinc-700 overflow-hidden">
+                {user?.profilePhoto ? (
                   <img 
-                    src={`http://localhost:5000${profilePhotoUrl}`} 
+                    src={`http://localhost:5000${user.profilePhoto}`} 
                     alt="Profile" 
                     className="w-full h-full object-cover"
                   />
@@ -81,24 +100,107 @@ const Dashboard = () => {
               </button>
             </div>
             
-            {/* Welcome Message */}
-            <div className="flex-1 text-center md:text-left">
-              <h1 className="text-4xl font-bold text-zinc-100 mb-2">
-                Welcome back, {user?.name || 'User'}! 👋
-              </h1>
-              <p className="text-zinc-400 text-lg">
-                You're successfully logged in to your account
-              </p>
+            {/* Profile Information */}
+            <div className="flex-1">
+              <div className="flex items-center space-x-3 mb-2">
+                <h1 className="text-3xl font-bold text-zinc-100">{user?.name}</h1>
+                {/* Online Status Indicator */}
+                <button
+                  onClick={handleOnlineStatusToggle}
+                  className="relative flex h-3 w-3 transition-colors"
+                  title={user?.isOnline ? 'Click to go offline' : 'Click to go online'}
+                >
+                  <span className={`animate-ping absolute inline-flex h-full w-full rounded-full ${user?.isOnline ? 'bg-green-400' : 'bg-gray-400'} opacity-75`}></span>
+                  <span className={`relative inline-flex rounded-full h-3 w-3 ${user?.isOnline ? 'bg-green-500' : 'bg-gray-500'}`}></span>
+                </button>
+              </div>
+              
+              <p className="text-zinc-400 text-lg mb-2">@{user?.username || user?.email?.split('@')[0]}</p>
+              
+              {user?.bio && (
+                <p className="text-zinc-300 italic mb-4 text-lg">"{user.bio}"</p>
+              )}
+
+              <div className="flex flex-wrap gap-4 mb-4">
+                {user?.location && (
+                  <div className="flex items-center text-zinc-400">
+                    <MapPin className="w-4 h-4 mr-2" />
+                    <span>{user.location}</span>
+                  </div>
+                )}
+                
+                {user?.github && (
+                  <div className="flex items-center">
+                    <Github className="w-4 h-4 mr-2 text-zinc-400" />
+                    <a 
+                      href={`https://github.com/${user.github}`} 
+                      target="_blank" 
+                      rel="noopener noreferrer" 
+                      className="text-blue-400 hover:underline"
+                    >
+                      @{user.github}
+                    </a>
+                  </div>
+                )}
+              </div>
+
+              {/* Social Accounts */}
+              <div className="flex space-x-3 mb-4">
+                {user?.twitter && (
+                  <a 
+                    href={`https://twitter.com/${user.twitter}`} 
+                    target="_blank" 
+                    rel="noopener noreferrer" 
+                    className="text-blue-400 hover:text-blue-300 transition-colors"
+                    title="Twitter"
+                  >
+                    <Twitter className="w-5 h-5" />
+                  </a>
+                )}
+                {user?.linkedin && (
+                  <a 
+                    href={`https://linkedin.com/in/${user.linkedin}`} 
+                    target="_blank" 
+                    rel="noopener noreferrer" 
+                    className="text-blue-400 hover:text-blue-300 transition-colors"
+                    title="LinkedIn"
+                  >
+                    <Linkedin className="w-5 h-5" />
+                  </a>
+                )}
+                {user?.website && (
+                  <a 
+                    href={user.website} 
+                    target="_blank" 
+                    rel="noopener noreferrer" 
+                    className="text-blue-400 hover:text-blue-300 transition-colors"
+                    title="Website"
+                  >
+                    <Globe className="w-5 h-5" />
+                  </a>
+                )}
+              </div>
+
+              {/* Edit Profile Button */}
+              <button
+                onClick={() => setShowEditProfileModal(true)}
+                className="glass-button-secondary flex items-center space-x-2"
+              >
+                <Edit3 className="w-4 h-4" />
+                <span>Edit Profile</span>
+              </button>
             </div>
 
             {/* Logout Button */}
-            <button
-              onClick={handleLogout}
-              className="glass-button-secondary flex items-center space-x-2"
-            >
-              <LogOut className="w-5 h-5" />
-              <span>Logout</span>
-            </button>
+            <div className="flex-shrink-0">
+              <button
+                onClick={handleLogout}
+                className="glass-button-secondary flex items-center space-x-2"
+              >
+                <LogOut className="w-5 h-5" />
+                <span>Logout</span>
+              </button>
+            </div>
           </div>
         </div>
 
@@ -273,8 +375,16 @@ const Dashboard = () => {
       <ProfilePhotoUploadModal
         isOpen={showProfilePhotoModal}
         onClose={() => setShowProfilePhotoModal(false)}
-        currentPhoto={profilePhotoUrl}
+        currentPhoto={user?.profilePhoto}
         onPhotoUpdate={handleProfilePhotoUpdate}
+      />
+      
+      {/* Edit Profile Modal */}
+      <EditProfileModal
+        isOpen={showEditProfileModal}
+        onClose={() => setShowEditProfileModal(false)}
+        user={user}
+        onProfileUpdate={handleProfileUpdate}
       />
     </div>
   );
