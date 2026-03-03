@@ -83,10 +83,10 @@ const SignIn = () => {
         <div className="glass-morphism p-8">
           {/* Header */}
           <div className="text-center mb-8">
-            <h1 className="text-3xl font-bold text-white mb-2">
+            <h1 className="text-3xl font-bold text-zinc-100 mb-2">
               Welcome Back
             </h1>
-            <p className="text-white/70">
+            <p className="text-zinc-400">
               Sign in to your account to continue
             </p>
           </div>
@@ -95,11 +95,11 @@ const SignIn = () => {
           <form onSubmit={handleSubmit} className="space-y-6">
             {/* Email Field */}
             <div>
-              <label htmlFor="email" className="block text-white/80 text-sm font-medium mb-2">
+              <label htmlFor="email" className="block text-zinc-300 text-sm font-medium mb-2">
                 Email Address
               </label>
               <div className="relative">
-                <Mail className="absolute left-3 top-1/2 transform -translate-y-1/2 text-white/50 w-5 h-5" />
+                <Mail className="absolute left-3 top-1/2 transform -translate-y-1/2 text-zinc-500 w-5 h-5" />
                 <input
                   type="email"
                   id="email"
@@ -119,11 +119,11 @@ const SignIn = () => {
 
             {/* Password Field */}
             <div>
-              <label htmlFor="password" className="block text-white/80 text-sm font-medium mb-2">
+              <label htmlFor="password" className="block text-zinc-300 text-sm font-medium mb-2">
                 Password
               </label>
               <div className="relative">
-                <Lock className="absolute left-3 top-1/2 transform -translate-y-1/2 text-white/50 w-5 h-5" />
+                <Lock className="absolute left-3 top-1/2 transform -translate-y-1/2 text-zinc-500 w-5 h-5" />
                 <input
                   type={showPassword ? 'text' : 'password'}
                   id="password"
@@ -138,7 +138,7 @@ const SignIn = () => {
                 <button
                   type="button"
                   onClick={() => setShowPassword(!showPassword)}
-                  className="absolute right-3 top-1/2 transform -translate-y-1/2 text-white/50 hover:text-white/80 transition-colors"
+                  className="absolute right-3 top-1/2 transform -translate-y-1/2 text-zinc-500 hover:text-zinc-300 transition-colors"
                   disabled={isSubmitting}
                 >
                   {showPassword ? <EyeOff className="w-5 h-5" /> : <Eye className="w-5 h-5" />}
@@ -151,13 +151,13 @@ const SignIn = () => {
 
             {/* Remember Me & Forgot Password */}
             <div className="flex items-center justify-between">
-              <label className="flex items-center space-x-2 text-white/80 text-sm">
+              <label className="flex items-center space-x-2 text-zinc-300 text-sm">
                 <input
                   type="checkbox"
                   name="remember"
                   checked={formData.remember}
                   onChange={handleChange}
-                  className="rounded border-white/20 bg-white/10 text-purple-600 focus:ring-purple-500 focus:ring-offset-0"
+                  className="rounded border-zinc-600 bg-zinc-800 text-zinc-100 focus:ring-zinc-500 focus:ring-offset-0"
                   disabled={isSubmitting}
                 />
                 <span>Remember me</span>
@@ -165,7 +165,7 @@ const SignIn = () => {
               
               <Link
                 to="/forgot-password"
-                className="text-purple-400 hover:text-purple-300 transition-colors text-sm"
+                className="text-zinc-400 hover:text-zinc-200 transition-colors text-sm"
                 onClick={(e) => {
                   e.preventDefault();
                   // TODO: Implement forgot password functionality
@@ -180,11 +180,11 @@ const SignIn = () => {
             <button
               type="submit"
               disabled={isSubmitting}
-              className="glass-button w-full flex items-center justify-center space-x-2 disabled:opacity-50 disabled:cursor-not-allowed"
+              className="glass-button-primary w-full flex items-center justify-center space-x-2 disabled:opacity-50 disabled:cursor-not-allowed"
             >
               {isSubmitting ? (
                 <>
-                  <div className="animate-spin rounded-full h-5 w-5 border-b-2 border-white"></div>
+                  <div className="animate-spin rounded-full h-5 w-5 border-b-2 border-zinc-900"></div>
                   <span>Signing In...</span>
                 </>
               ) : (
@@ -199,10 +199,10 @@ const SignIn = () => {
           {/* Divider */}
           <div className="relative my-6">
             <div className="absolute inset-0 flex items-center">
-              <div className="w-full border-t border-white/20"></div>
+              <div className="w-full border-t border-zinc-700"></div>
             </div>
             <div className="relative flex justify-center text-sm">
-              <span className="px-2 bg-transparent text-white/50">Or</span>
+              <span className="px-2 bg-transparent text-zinc-500">Or</span>
             </div>
           </div>
 
@@ -225,11 +225,11 @@ const SignIn = () => {
 
           {/* Footer */}
           <div className="mt-8 text-center">
-            <p className="text-white/70">
+            <p className="text-zinc-400">
               Don't have an account?{' '}
               <Link
                 to="/signup"
-                className="text-purple-400 hover:text-purple-300 transition-colors font-medium"
+                className="text-zinc-100 hover:text-zinc-300 transition-colors font-medium"
               >
                 Sign Up
               </Link>

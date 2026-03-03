@@ -4,9 +4,9 @@ const LoadingSpinner = () => {
   return (
     <div className="min-h-screen flex items-center justify-center">
       <div className="flex flex-col items-center space-y-4">
-        <div className="animate-spin-slow">
+        <div className="animate-spin">
           <svg
-            className="w-16 h-16 text-purple-500"
+            className="w-16 h-16 text-zinc-400"
             xmlns="http://www.w3.org/2000/svg"
             fill="none"
             viewBox="0 0 24 24"
@@ -26,7 +26,7 @@ const LoadingSpinner = () => {
             ></path>
           </svg>
         </div>
-        <p className="text-white/70 text-lg">Loading...</p>
+        <p className="text-zinc-400 text-lg">Loading...</p>
       </div>
     </div>
   );
