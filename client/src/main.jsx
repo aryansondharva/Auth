@@ -6,6 +6,17 @@ import App from './App.jsx'
 import { AuthProvider } from './context/AuthContext.jsx'
 import './index.css'
 
+// Initialize theme on app load
+const initializeTheme = () => {
+  const savedTheme = localStorage.getItem('theme');
+  const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+  const isDark = savedTheme ? savedTheme === 'dark' : prefersDark;
+  
+  document.body.className = isDark ? 'dark' : 'light';
+};
+
+initializeTheme();
+
 ReactDOM.createRoot(document.getElementById('root')).render(
   <React.StrictMode>
     <BrowserRouter>

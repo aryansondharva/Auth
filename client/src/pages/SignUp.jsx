@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
+import { useTheme } from '../hooks/useTheme';
 import { Eye, EyeOff, Mail, User, Lock, ArrowRight } from 'lucide-react';
 import LoadingSpinner from '../components/LoadingSpinner';
 
@@ -17,6 +18,7 @@ const SignUp = () => {
   const [isSubmitting, setIsSubmitting] = useState(false);
 
   const { register, loading } = useAuth();
+  const { isLight } = useTheme();
   const navigate = useNavigate();
 
   const handleChange = (e) => {
