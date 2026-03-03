@@ -102,10 +102,10 @@ const SignUp = () => {
         <div className="glass-morphism p-8">
           {/* Header */}
           <div className="text-center mb-8">
-            <h1 className="text-3xl font-bold text-white mb-2">
+            <h1 className="text-3xl font-bold text-zinc-100 mb-2">
               Create Account
             </h1>
-            <p className="text-white/70">
+            <p className="text-zinc-400">
               Join us today and get started
             </p>
           </div>
@@ -114,11 +114,11 @@ const SignUp = () => {
           <form onSubmit={handleSubmit} className="space-y-6">
             {/* Name Field */}
             <div>
-              <label htmlFor="name" className="block text-white/80 text-sm font-medium mb-2">
+              <label htmlFor="name" className="block text-zinc-300 text-sm font-medium mb-2">
                 Full Name
               </label>
               <div className="relative">
-                <User className="absolute left-3 top-1/2 transform -translate-y-1/2 text-white/50 w-5 h-5" />
+                <User className="absolute left-3 top-1/2 transform -translate-y-1/2 text-zinc-500 w-5 h-5" />
                 <input
                   type="text"
                   id="name"
@@ -137,11 +137,11 @@ const SignUp = () => {
 
             {/* Email Field */}
             <div>
-              <label htmlFor="email" className="block text-white/80 text-sm font-medium mb-2">
+              <label htmlFor="email" className="block text-zinc-300 text-sm font-medium mb-2">
                 Email Address
               </label>
               <div className="relative">
-                <Mail className="absolute left-3 top-1/2 transform -translate-y-1/2 text-white/50 w-5 h-5" />
+                <Mail className="absolute left-3 top-1/2 transform -translate-y-1/2 text-zinc-500 w-5 h-5" />
                 <input
                   type="email"
                   id="email"
@@ -160,11 +160,11 @@ const SignUp = () => {
 
             {/* Password Field */}
             <div>
-              <label htmlFor="password" className="block text-white/80 text-sm font-medium mb-2">
+              <label htmlFor="password" className="block text-zinc-300 text-sm font-medium mb-2">
                 Password
               </label>
               <div className="relative">
-                <Lock className="absolute left-3 top-1/2 transform -translate-y-1/2 text-white/50 w-5 h-5" />
+                <Lock className="absolute left-3 top-1/2 transform -translate-y-1/2 text-zinc-500 w-5 h-5" />
                 <input
                   type={showPassword ? 'text' : 'password'}
                   id="password"
@@ -178,7 +178,7 @@ const SignUp = () => {
                 <button
                   type="button"
                   onClick={() => setShowPassword(!showPassword)}
-                  className="absolute right-3 top-1/2 transform -translate-y-1/2 text-white/50 hover:text-white/80 transition-colors"
+                  className="absolute right-3 top-1/2 transform -translate-y-1/2 text-zinc-500 hover:text-zinc-300 transition-colors"
                   disabled={isSubmitting}
                 >
                   {showPassword ? <EyeOff className="w-5 h-5" /> : <Eye className="w-5 h-5" />}
@@ -191,11 +191,11 @@ const SignUp = () => {
 
             {/* Confirm Password Field */}
             <div>
-              <label htmlFor="confirmPassword" className="block text-white/80 text-sm font-medium mb-2">
+              <label htmlFor="confirmPassword" className="block text-zinc-300 text-sm font-medium mb-2">
                 Confirm Password
               </label>
               <div className="relative">
-                <Lock className="absolute left-3 top-1/2 transform -translate-y-1/2 text-white/50 w-5 h-5" />
+                <Lock className="absolute left-3 top-1/2 transform -translate-y-1/2 text-zinc-500 w-5 h-5" />
                 <input
                   type={showConfirmPassword ? 'text' : 'password'}
                   id="confirmPassword"
@@ -209,7 +209,7 @@ const SignUp = () => {
                 <button
                   type="button"
                   onClick={() => setShowConfirmPassword(!showConfirmPassword)}
-                  className="absolute right-3 top-1/2 transform -translate-y-1/2 text-white/50 hover:text-white/80 transition-colors"
+                  className="absolute right-3 top-1/2 transform -translate-y-1/2 text-zinc-500 hover:text-zinc-300 transition-colors"
                   disabled={isSubmitting}
                 >
                   {showConfirmPassword ? <EyeOff className="w-5 h-5" /> : <Eye className="w-5 h-5" />}
@@ -224,11 +224,11 @@ const SignUp = () => {
             <button
               type="submit"
               disabled={isSubmitting}
-              className="glass-button w-full flex items-center justify-center space-x-2 disabled:opacity-50 disabled:cursor-not-allowed"
+              className="glass-button-primary w-full flex items-center justify-center space-x-2 disabled:opacity-50 disabled:cursor-not-allowed"
             >
               {isSubmitting ? (
                 <>
-                  <div className="animate-spin rounded-full h-5 w-5 border-b-2 border-white"></div>
+                  <div className="animate-spin rounded-full h-5 w-5 border-b-2 border-zinc-900"></div>
                   <span>Creating Account...</span>
                 </>
               ) : (
@@ -242,11 +242,11 @@ const SignUp = () => {
 
           {/* Footer */}
           <div className="mt-8 text-center">
-            <p className="text-white/70">
+            <p className="text-zinc-400">
               Already have an account?{' '}
               <Link
                 to="/signin"
-                className="text-purple-400 hover:text-purple-300 transition-colors font-medium"
+                className="text-zinc-100 hover:text-zinc-300 transition-colors font-medium"
               >
                 Sign In
               </Link>

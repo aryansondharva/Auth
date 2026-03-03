@@ -8,24 +8,41 @@
   }
   
   body {
-    @apply bg-gradient-to-br from-slate-900 via-purple-900 to-slate-900 min-h-screen;
+    @apply bg-zinc-950 text-zinc-100 min-h-screen;
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+  }
+  
+  * {
+    @apply border-zinc-800;
   }
 }
 
 @layer components {
   .glass-morphism {
-    @apply bg-white/10 backdrop-blur-lg border border-white/20 rounded-2xl shadow-2xl;
+    @apply bg-zinc-900/50 backdrop-blur-xl border border-zinc-800/50 rounded-2xl shadow-2xl shadow-black/20;
   }
   
   .glass-input {
-    @apply bg-white/5 border border-white/10 rounded-lg px-4 py-3 text-white placeholder-white/50 focus:outline-none focus:border-white/30 focus:bg-white/10 transition-all duration-300;
+    @apply bg-zinc-800/50 border border-zinc-700/50 rounded-lg px-4 py-3 text-zinc-100 placeholder-zinc-500 focus:outline-none focus:border-zinc-600 focus:bg-zinc-800/70 transition-all duration-200;
   }
   
   .glass-button {
-    @apply bg-gradient-to-r from-purple-600 to-pink-600 text-white font-semibold py-3 px-6 rounded-lg hover:from-purple-700 hover:to-pink-700 transform hover:scale-105 transition-all duration-300 shadow-lg;
+    @apply bg-zinc-800 hover:bg-zinc-700 text-zinc-100 font-medium py-3 px-6 rounded-lg transform hover:scale-[1.02] transition-all duration-200 shadow-lg shadow-black/10 border border-zinc-700/50;
+  }
+  
+  .glass-button-primary {
+    @apply bg-white text-black hover:bg-zinc-100 font-medium py-3 px-6 rounded-lg transform hover:scale-[1.02] transition-all duration-200 shadow-lg shadow-black/10;
   }
   
   .glass-button-secondary {
-    @apply bg-white/10 backdrop-blur border border-white/20 text-white font-semibold py-3 px-6 rounded-lg hover:bg-white/20 transform hover:scale-105 transition-all duration-300;
+    @apply bg-zinc-800/50 hover:bg-zinc-800/70 text-zinc-300 hover:text-zinc-100 font-medium py-3 px-6 rounded-lg transform hover:scale-[1.02] transition-all duration-200 border border-zinc-700/50;
+  }
+  
+  .gradient-text {
+    @apply bg-gradient-to-r from-white to-zinc-400 bg-clip-text text-transparent;
+  }
+  
+  .card-hover {
+    @apply hover:bg-zinc-800/70 hover:border-zinc-700 transition-all duration-200;
   }
 }

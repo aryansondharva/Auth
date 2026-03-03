@@ -24,12 +24,12 @@ const Navbar = () => {
   };
 
   return (
-    <nav className="glass-morphism sticky top-0 z-50 border-b border-white/10">
+    <nav className="sticky top-0 z-50 bg-zinc-900/80 backdrop-blur-xl border-b border-zinc-800/50">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex items-center justify-between h-16">
           {/* Logo */}
           <div className="flex items-center">
-            <Link to="/" className="text-white font-bold text-xl">
+            <Link to="/" className="text-zinc-100 font-bold text-xl">
               AuthSystem
             </Link>
           </div>
@@ -40,13 +40,13 @@ const Navbar = () => {
               <>
                 <Link
                   to="/dashboard"
-                  className={`text-white/80 hover:text-white transition-colors ${
-                    location.pathname === '/dashboard' ? 'text-white' : ''
+                  className={`text-zinc-400 hover:text-zinc-100 transition-colors ${
+                    location.pathname === '/dashboard' ? 'text-zinc-100' : ''
                   }`}
                 >
                   Dashboard
                 </Link>
-                <div className="flex items-center space-x-2 text-white/80">
+                <div className="flex items-center space-x-2 text-zinc-400">
                   <User className="w-4 h-4" />
                   <span className="text-sm">{user?.name}</span>
                 </div>
@@ -55,16 +55,16 @@ const Navbar = () => {
               <>
                 <Link
                   to="/signin"
-                  className={`text-white/80 hover:text-white transition-colors ${
-                    location.pathname === '/signin' ? 'text-white' : ''
+                  className={`text-zinc-400 hover:text-zinc-100 transition-colors ${
+                    location.pathname === '/signin' ? 'text-zinc-100' : ''
                   }`}
                 >
                   Sign In
                 </Link>
                 <Link
                   to="/signup"
-                  className={`text-white/80 hover:text-white transition-colors ${
-                    location.pathname === '/signup' ? 'text-white' : ''
+                  className={`text-zinc-400 hover:text-zinc-100 transition-colors ${
+                    location.pathname === '/signup' ? 'text-zinc-100' : ''
                   }`}
                 >
                   Sign Up
@@ -78,7 +78,7 @@ const Navbar = () => {
             {/* Dark mode toggle */}
             <button
               onClick={toggleDarkMode}
-              className="text-white/80 hover:text-white transition-colors p-2 rounded-lg hover:bg-white/10"
+              className="text-zinc-400 hover:text-zinc-100 transition-colors p-2 rounded-lg hover:bg-zinc-800/50"
               aria-label="Toggle dark mode"
             >
               {darkMode ? (
@@ -92,7 +92,7 @@ const Navbar = () => {
             {isAuthenticated && (
               <button
                 onClick={logout}
-                className="flex items-center space-x-2 text-white/80 hover:text-white transition-colors p-2 rounded-lg hover:bg-white/10"
+                className="flex items-center space-x-2 text-zinc-400 hover:text-zinc-100 transition-colors p-2 rounded-lg hover:bg-zinc-800/50"
                 aria-label="Logout"
               >
                 <LogOut className="w-5 h-5" />
