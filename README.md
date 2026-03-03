@@ -284,7 +284,63 @@ Authorization: Bearer <your-jwt-token>
 
 1. Build the project: `npm run build`
 2. Deploy the `dist` folder to your hosting provider
-3. Set environment variables for API URL
+3. Set environment variables
+
+### 🔧 Configuration
+
+### Environment Setup
+```bash
+# Copy the example environment file
+cp .env.example .env
+
+# Edit with your configuration
+nano .env
+```
+
+### Required Environment Variables
+```env
+# Database
+DATABASE_URL="postgresql://username:password@localhost:5432/authdb"
+
+# JWT
+JWT_SECRET="your-super-secret-jwt-key"
+JWT_EXPIRES_IN="7d"
+
+# Server
+PORT=5000
+NODE_ENV="development"
+```
+
+### Optional Environment Variables
+```env
+# CORS
+CORS_ORIGIN="http://localhost:5173"
+
+# Email
+EMAIL_HOST="smtp.gmail.com"
+EMAIL_PORT=587
+EMAIL_USER="your-email@gmail.com"
+EMAIL_PASS="your-app-password"
+
+# File Upload
+MAX_FILE_SIZE=5242880
+UPLOAD_PATH="./uploads"
+
+# Rate Limiting
+RATE_LIMIT_WINDOW_MS=900000
+RATE_LIMIT_MAX_REQUESTS=100
+
+# Redis (for sessions)
+REDIS_URL="redis://localhost:6379"
+
+# Logging
+LOG_LEVEL="info"
+LOG_FILE="logs/app.log"
+
+# Security
+BCRYPT_ROUNDS=12
+SESSION_SECRET="your-session-secret"
+```
 
 ## 📝 Environment Variables
 
