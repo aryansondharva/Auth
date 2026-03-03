@@ -42,6 +42,22 @@ jspm_packages/
 .npm
 
 # Optional REPL history
+
+# Backend environment files
+.env
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+
+# Database files
+*.db
+*.sqlite
+*.sqlite3
+
+# Uploads directory
+uploads/
+temp/
 .node_repl_history
 
 # Output of 'npm pack'
