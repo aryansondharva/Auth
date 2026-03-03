@@ -52,7 +52,7 @@ const register = async (req, res) => {
         id: true,
         name: true,
         email: true,
-        createdAt: true
+        created_at: true
       }
     });
 
@@ -119,7 +119,7 @@ const login = async (req, res) => {
       id: user.id,
       name: user.name,
       email: user.email,
-      createdAt: user.createdAt
+      created_at: user.created_at
     };
 
     res.json({

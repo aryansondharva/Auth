@@ -1,12 +1,10 @@
 import React from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
-import { useTheme } from '../hooks/useTheme';
-import { Moon, Sun, LogOut, User } from 'lucide-react';
+import { LogOut, User } from 'lucide-react';
 
 const Navbar = () => {
   const { isAuthenticated, user, logout } = useAuth();
-  const { isDark, toggleTheme } = useTheme();
   const location = useLocation();
 
   return (
@@ -61,20 +59,6 @@ const Navbar = () => {
 
           {/* Right side buttons */}
           <div className="flex items-center space-x-4">
-            {/* Theme toggle */}
-            <button
-              onClick={toggleTheme}
-              className="text-zinc-400 hover:text-zinc-100 transition-colors p-2 rounded-lg hover:bg-zinc-800/50"
-              aria-label="Toggle theme"
-              title={isDark ? 'Switch to light mode' : 'Switch to dark mode'}
-            >
-              {isDark ? (
-                <Sun className="w-5 h-5" />
-              ) : (
-                <Moon className="w-5 h-5" />
-              )}
-            </button>
-
             {/* Logout button */}
             {isAuthenticated && (
               <button

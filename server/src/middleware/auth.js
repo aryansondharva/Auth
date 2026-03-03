@@ -22,7 +22,7 @@ const authMiddleware = async (req, res, next) => {
         id: true,
         name: true,
         email: true,
-        createdAt: true
+        created_at: true
       }
     });
 

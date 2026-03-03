@@ -1,7 +1,6 @@
 import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
-import { useTheme } from '../hooks/useTheme';
 import { Eye, EyeOff, Mail, User, Lock, ArrowRight } from 'lucide-react';
 import LoadingSpinner from '../components/LoadingSpinner';
 
@@ -18,7 +17,6 @@ const SignUp = () => {
   const [isSubmitting, setIsSubmitting] = useState(false);
 
   const { register, loading } = useAuth();
-  const { theme } = useTheme();
   const navigate = useNavigate();
 
   const handleChange = (e) => {
@@ -98,18 +96,16 @@ const SignUp = () => {
     return <LoadingSpinner />;
   }
 
-  const isLightMode = theme === 'light';
-
   return (
     <div className="min-h-screen flex items-center justify-center px-4 py-12">
       <div className="w-full max-w-md">
         <div className="glass-morphism p-8">
           {/* Header */}
           <div className="text-center mb-8">
-            <h1 className={`text-3xl font-bold mb-2 ${isLightMode ? 'text-black' : 'text-white'}`}>
+            <h1 className="text-3xl font-bold text-white mb-2">
               Create Account
             </h1>
-            <p className={`mb-6 ${isLightMode ? 'text-black' : 'text-zinc-300'}`}>
+            <p className="text-zinc-300 mb-6">
               Join us today and get started
             </p>
           </div>
@@ -118,7 +114,7 @@ const SignUp = () => {
           <form onSubmit={handleSubmit} className="space-y-6">
             {/* Name Field */}
             <div>
-              <label htmlFor="name" className={`block text-sm font-medium mb-2 ${isLightMode ? 'text-black' : 'text-zinc-200'}`}>
+              <label htmlFor="name" className="block text-zinc-200 text-sm font-medium mb-2">
                 Full Name
               </label>
               <div className="relative">
@@ -141,7 +137,7 @@ const SignUp = () => {
 
             {/* Email Field */}
             <div>
-              <label htmlFor="email" className={`block text-sm font-medium mb-2 ${isLightMode ? 'text-black' : 'text-zinc-200'}`}>
+              <label htmlFor="email" className="block text-zinc-200 text-sm font-medium mb-2">
                 Email Address
               </label>
               <div className="relative">
@@ -164,7 +160,7 @@ const SignUp = () => {
 
             {/* Password Field */}
             <div>
-              <label htmlFor="password" className={`block text-sm font-medium mb-2 ${isLightMode ? 'text-black' : 'text-zinc-200'}`}>
+              <label htmlFor="password" className="block text-zinc-200 text-sm font-medium mb-2">
                 Password
               </label>
               <div className="relative">
@@ -195,7 +191,7 @@ const SignUp = () => {
 
             {/* Confirm Password Field */}
             <div>
-              <label htmlFor="confirmPassword" className={`block text-sm font-medium mb-2 ${isLightMode ? 'text-black' : 'text-zinc-200'}`}>
+              <label htmlFor="confirmPassword" className="block text-zinc-200 text-sm font-medium mb-2">
                 Confirm Password
               </label>
               <div className="relative">
@@ -246,11 +242,11 @@ const SignUp = () => {
 
           {/* Footer */}
           <div className="mt-8 text-center">
-            <p className={isLightMode ? 'text-black' : 'text-zinc-300'}>
+            <p className="text-zinc-300">
               Already have an account?{' '}
               <Link
                 to="/signin"
-                className={`transition-colors font-medium ${isLightMode ? 'text-black hover:text-zinc-700' : 'text-white hover:text-zinc-200'}`}
+                className="text-white hover:text-zinc-200 transition-colors font-medium"
               >
                 Sign In
               </Link>

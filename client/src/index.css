@@ -12,16 +12,8 @@
     font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
   }
   
-  body.light {
-    @apply bg-white text-black;
-  }
-  
   * {
     @apply border-zinc-800;
-  }
-  
-  body.light * {
-    @apply border-zinc-200;
   }
 }
 
@@ -30,55 +22,27 @@
     @apply bg-zinc-900/50 backdrop-blur-xl border border-zinc-800/50 rounded-2xl shadow-2xl shadow-black/20 transition-all duration-200;
   }
   
-  body.light .glass-morphism {
-    @apply bg-white/90 backdrop-blur-xl border border-zinc-200/50 shadow-2xl shadow-zinc-200/20;
-  }
-  
   .glass-input {
     @apply bg-zinc-800/50 border border-zinc-700/50 rounded-lg px-4 py-3 text-zinc-100 placeholder-zinc-500 focus:outline-none focus:border-zinc-600 focus:bg-zinc-800/70 transition-all duration-200;
-  }
-  
-  body.light .glass-input {
-    @apply bg-white border border-zinc-300 text-black placeholder-zinc-500 focus:border-zinc-400 focus:bg-zinc-50;
   }
   
   .glass-button {
     @apply bg-zinc-800 hover:bg-zinc-700 text-zinc-100 font-medium py-3 px-6 rounded-lg transform hover:scale-[1.02] transition-all duration-200 shadow-lg shadow-black/10 border border-zinc-700/50;
   }
   
-  body.light .glass-button {
-    @apply bg-zinc-100 hover:bg-zinc-200 text-black shadow-lg shadow-zinc-200/10 border border-zinc-300/50;
-  }
-  
   .glass-button-primary {
     @apply bg-white text-black hover:bg-zinc-100 font-medium py-3 px-6 rounded-lg transform hover:scale-[1.02] transition-all duration-200 shadow-lg shadow-black/10;
-  }
-  
-  body.light .glass-button-primary {
-    @apply bg-black text-white hover:bg-zinc-800;
   }
   
   .glass-button-secondary {
     @apply bg-zinc-800/50 hover:bg-zinc-800/70 text-zinc-300 hover:text-zinc-100 font-medium py-3 px-6 rounded-lg transform hover:scale-[1.02] transition-all duration-200 border border-zinc-700/50;
   }
   
-  body.light .glass-button-secondary {
-    @apply bg-zinc-100 hover:bg-zinc-200 text-black hover:text-black border border-zinc-300/50;
-  }
-  
   .gradient-text {
     @apply bg-gradient-to-r from-white to-zinc-400 bg-clip-text text-transparent;
   }
   
-  body.light .gradient-text {
-    @apply bg-gradient-to-r from-black to-zinc-600 bg-clip-text text-transparent;
-  }
-  
   .card-hover {
     @apply hover:bg-zinc-800/70 hover:border-zinc-700 transition-all duration-200;
-  }
-  
-  body.light .card-hover {
-    @apply hover:bg-zinc-50 hover:border-zinc-300;
   }
 }

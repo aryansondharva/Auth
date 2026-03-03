@@ -1,7 +1,6 @@
 import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
-import { useTheme } from '../hooks/useTheme';
 import { Eye, EyeOff, Mail, Lock, ArrowRight } from 'lucide-react';
 import LoadingSpinner from '../components/LoadingSpinner';
 
@@ -17,7 +16,6 @@ const SignIn = () => {
 
   const { login, loading } = useAuth();
   const navigate = useNavigate();
-  const { theme } = useTheme();
 
   const handleChange = (e) => {
     const { name, value, type, checked } = e.target;
@@ -79,18 +77,16 @@ const SignIn = () => {
     return <LoadingSpinner />;
   }
 
-  const isLightMode = theme === 'light';
-
   return (
     <div className="min-h-screen flex items-center justify-center px-4 py-12">
       <div className="w-full max-w-md">
         <div className="glass-morphism p-8">
           {/* Header */}
           <div className="text-center mb-8">
-            <h1 className={`text-3xl font-bold mb-2 ${isLightMode ? 'text-black' : 'text-white'}`}>
+            <h1 className="text-3xl font-bold text-white mb-2">
               Welcome Back
             </h1>
-            <p className={`mb-6 ${isLightMode ? 'text-black' : 'text-zinc-300'}`}>
+            <p className="text-zinc-300 mb-6">
               Sign in to your account to continue
             </p>
           </div>
@@ -99,7 +95,7 @@ const SignIn = () => {
           <form onSubmit={handleSubmit} className="space-y-6">
             {/* Email Field */}
             <div>
-              <label htmlFor="email" className={`block text-sm font-medium mb-2 ${isLightMode ? 'text-black' : 'text-zinc-200'}`}>
+              <label htmlFor="email" className="block text-zinc-200 text-sm font-medium mb-2">
                 Email Address
               </label>
               <div className="relative">
@@ -123,7 +119,7 @@ const SignIn = () => {
 
             {/* Password Field */}
             <div>
-              <label htmlFor="password" className={`block text-sm font-medium mb-2 ${isLightMode ? 'text-black' : 'text-zinc-200'}`}>
+              <label htmlFor="password" className="block text-zinc-200 text-sm font-medium mb-2">
                 Password
               </label>
               <div className="relative">
@@ -155,7 +151,7 @@ const SignIn = () => {
 
             {/* Remember Me & Forgot Password */}
             <div className="flex items-center justify-between">
-              <label className={`flex items-center space-x-2 text-sm ${isLightMode ? 'text-black' : 'text-zinc-200'}`}>
+              <label className="flex items-center space-x-2 text-zinc-200 text-sm">
                 <input
                   type="checkbox"
                   name="remember"
@@ -169,7 +165,7 @@ const SignIn = () => {
               
               <Link
                 to="/forgot-password"
-                className={`transition-colors text-sm ${isLightMode ? 'text-black hover:text-zinc-700' : 'text-zinc-300 hover:text-zinc-100'}`}
+                className="text-zinc-300 hover:text-zinc-100 transition-colors text-sm"
                 onClick={(e) => {
                   e.preventDefault();
                   // TODO: Implement forgot password functionality
@@ -229,11 +225,11 @@ const SignIn = () => {
 
           {/* Footer */}
           <div className="mt-8 text-center">
-            <p className={isLightMode ? 'text-black' : 'text-zinc-300'}>
+            <p className="text-zinc-300">
               Don't have an account?{' '}
               <Link
                 to="/signup"
-                className={`transition-colors font-medium ${isLightMode ? 'text-black hover:text-zinc-700' : 'text-white hover:text-zinc-200'}`}
+                className="text-white hover:text-zinc-200 transition-colors font-medium"
               >
                 Sign Up
               </Link>
