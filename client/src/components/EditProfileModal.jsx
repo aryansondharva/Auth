@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { X, Save, User, MapPin, Github, Twitter, Linkedin, Globe, FileText } from 'lucide-react';
+import { X, Save, User, MapPin, Github, Twitter, Linkedin, Globe, FileText, MessageSquare, Trophy } from 'lucide-react';
 
 const EditProfileModal = ({ isOpen, onClose, user, onProfileUpdate }) => {
   const [formData, setFormData] = useState({
@@ -8,6 +8,8 @@ const EditProfileModal = ({ isOpen, onClose, user, onProfileUpdate }) => {
     github: user?.github || '',
     twitter: user?.twitter || '',
     linkedin: user?.linkedin || '',
+    discord: user?.discord || '',
+    leetcode: user?.leetcode || '',
     website: user?.website || ''
   });
   const [loading, setLoading] = useState(false);
@@ -160,6 +162,38 @@ const EditProfileModal = ({ isOpen, onClose, user, onProfileUpdate }) => {
                 value={formData.linkedin}
                 onChange={handleChange}
                 placeholder="linkedin-username"
+                className="w-full px-4 py-2 bg-zinc-800 border border-zinc-700 rounded-lg text-zinc-100 placeholder-zinc-500 focus:outline-none focus:border-blue-500 transition-colors"
+              />
+            </div>
+
+            {/* Discord */}
+            <div>
+              <label className="flex items-center text-zinc-300 text-sm font-medium mb-2">
+                <MessageSquare className="w-4 h-4 mr-2" />
+                Discord Username
+              </label>
+              <input
+                type="text"
+                name="discord"
+                value={formData.discord}
+                onChange={handleChange}
+                placeholder="discord-username"
+                className="w-full px-4 py-2 bg-zinc-800 border border-zinc-700 rounded-lg text-zinc-100 placeholder-zinc-500 focus:outline-none focus:border-blue-500 transition-colors"
+              />
+            </div>
+
+            {/* LeetCode */}
+            <div>
+              <label className="flex items-center text-zinc-300 text-sm font-medium mb-2">
+                <Trophy className="w-4 h-4 mr-2" />
+                LeetCode Username
+              </label>
+              <input
+                type="text"
+                name="leetcode"
+                value={formData.leetcode}
+                onChange={handleChange}
+                placeholder="leetcode-username"
                 className="w-full px-4 py-2 bg-zinc-800 border border-zinc-700 rounded-lg text-zinc-100 placeholder-zinc-500 focus:outline-none focus:border-blue-500 transition-colors"
               />
             </div>
