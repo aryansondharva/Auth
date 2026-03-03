@@ -1,0 +1,109 @@
+import React from 'react';
+import { Link, useLocation } from 'react-router-dom';
+import { useAuth } from '../context/AuthContext';
+import { Moon, Sun, LogOut, User } from 'lucide-react';
+
+const Navbar = () => {
+  const { isAuthenticated, user, logout } = useAuth();
+  const location = useLocation();
+  const [darkMode, setDarkMode] = React.useState(() => {
+    return localStorage.getItem('darkMode') === 'true';
+  });
+
+  React.useEffect(() => {
+    if (darkMode) {
+      document.documentElement.classList.add('dark');
+    } else {
+      document.documentElement.classList.remove('dark');
+    }
+    localStorage.setItem('darkMode', darkMode);
+  }, [darkMode]);
+
+  const toggleDarkMode = () => {
+    setDarkMode(!darkMode);
+  };
+
+  return (
+    <nav className="glass-morphism sticky top-0 z-50 border-b border-white/10">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="flex items-center justify-between h-16">
+          {/* Logo */}
+          <div className="flex items-center">
+            <Link to="/" className="text-white font-bold text-xl">
+              AuthSystem
+            </Link>
+          </div>
+
+          {/* Navigation Links */}
+          <div className="hidden md:flex items-center space-x-8">
+            {isAuthenticated ? (
+              <>
+                <Link
+                  to="/dashboard"
+                  className={`text-white/80 hover:text-white transition-colors ${
+                    location.pathname === '/dashboard' ? 'text-white' : ''
+                  }`}
+                >
+                  Dashboard
+                </Link>
+                <div className="flex items-center space-x-2 text-white/80">
+                  <User className="w-4 h-4" />
+                  <span className="text-sm">{user?.name}</span>
+                </div>
+              </>
+            ) : (
+              <>
+                <Link
+                  to="/signin"
+                  className={`text-white/80 hover:text-white transition-colors ${
+                    location.pathname === '/signin' ? 'text-white' : ''
+                  }`}
+                >
+                  Sign In
+                </Link>
+                <Link
+                  to="/signup"
+                  className={`text-white/80 hover:text-white transition-colors ${
+                    location.pathname === '/signup' ? 'text-white' : ''
+                  }`}
+                >
+                  Sign Up
+                </Link>
+              </>
+            )}
+          </div>
+
+          {/* Right side buttons */}
+          <div className="flex items-center space-x-4">
+            {/* Dark mode toggle */}
+            <button
+              onClick={toggleDarkMode}
+              className="text-white/80 hover:text-white transition-colors p-2 rounded-lg hover:bg-white/10"
+              aria-label="Toggle dark mode"
+            >
+              {darkMode ? (
+                <Sun className="w-5 h-5" />
+              ) : (
+                <Moon className="w-5 h-5" />
+              )}
+            </button>
+
+            {/* Logout button */}
+            {isAuthenticated && (
+              <button
+                onClick={logout}
+                className="flex items-center space-x-2 text-white/80 hover:text-white transition-colors p-2 rounded-lg hover:bg-white/10"
+                aria-label="Logout"
+              >
+                <LogOut className="w-5 h-5" />
+                <span className="hidden sm:inline">Logout</span>
+              </button>
+            )}
+          </div>
+        </div>
+      </div>
+    </nav>
+  );
+};
+
+export default Navbar;
