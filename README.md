@@ -1,8 +1,36 @@
-# 🔐 Full-Stack Authentication System
+# Auth System - Modern Authentication & Profile Management
 
-A modern, production-ready authentication system built with React frontend and Node.js/Express backend with PostgreSQL database.
+A comprehensive authentication system with profile management, social media integration, and real-time features.
 
-## 🚀 Tech Stack
+## 🚀 Features
+
+### 🔐 Authentication
+- **User Registration** with automatic username generation
+- **Secure Login** with JWT tokens
+- **Password Reset** functionality
+- **Token Management** with automatic expiration handling
+- **Protected Routes** with authentication guards
+
+### 👤 Profile Management
+- **Profile Photo Upload** with image validation
+- **Auto-Generated Username** from name/email
+- **Profile Editing** with validation
+- **Online Status** tracking and display
+- **Social Media Links** (GitHub, Twitter, LinkedIn, Website)
+- **Location & Bio** management
+- **User ID Management** with change history
+
+### 🎨 UI/UX Features
+- **Modern Dashboard** with glass morphism design
+- **Responsive Design** for mobile and desktop
+- **Real-time Updates** without page refresh
+- **Loading States** with proper error handling
+- **Smooth Animations** and transitions
+
+### � Mobile Responsive
+- **Mobile Menu** with hamburger navigation
+- **Touch-Friendly** interface
+- **Adaptive Layout** for all screen sizes
 
 ### Frontend (Client)
 - **React.js** with Vite
