@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
+import { useTheme } from '../hooks/useTheme';
 import { Eye, EyeOff, Mail, Lock, ArrowRight } from 'lucide-react';
 import LoadingSpinner from '../components/LoadingSpinner';
 
@@ -83,10 +84,10 @@ const SignIn = () => {
         <div className="glass-morphism p-8">
           {/* Header */}
           <div className="text-center mb-8">
-            <h1 className="text-3xl font-bold text-zinc-100 mb-2">
+            <h1 className="text-3xl font-bold text-zinc-100 mb-2 dark:text-black">
               Welcome Back
             </h1>
-            <p className="text-zinc-400">
+            <p className="text-zinc-400 dark:text-black">
               Sign in to your account to continue
             </p>
           </div>
@@ -95,7 +96,7 @@ const SignIn = () => {
           <form onSubmit={handleSubmit} className="space-y-6">
             {/* Email Field */}
             <div>
-              <label htmlFor="email" className="block text-zinc-300 text-sm font-medium mb-2">
+              <label htmlFor="email" className="block text-zinc-300 text-sm font-medium mb-2 dark:text-black">
                 Email Address
               </label>
               <div className="relative">
@@ -119,7 +120,7 @@ const SignIn = () => {
 
             {/* Password Field */}
             <div>
-              <label htmlFor="password" className="block text-zinc-300 text-sm font-medium mb-2">
+              <label htmlFor="password" className="block text-zinc-300 text-sm font-medium mb-2 dark:text-black">
                 Password
               </label>
               <div className="relative">
@@ -151,7 +152,7 @@ const SignIn = () => {
 
             {/* Remember Me & Forgot Password */}
             <div className="flex items-center justify-between">
-              <label className="flex items-center space-x-2 text-zinc-300 text-sm">
+              <label className="flex items-center space-x-2 text-zinc-300 text-sm dark:text-black">
                 <input
                   type="checkbox"
                   name="remember"
@@ -165,7 +166,7 @@ const SignIn = () => {
               
               <Link
                 to="/forgot-password"
-                className="text-zinc-400 hover:text-zinc-200 transition-colors text-sm"
+                className="text-zinc-400 hover:text-zinc-200 transition-colors text-sm dark:text-black dark:hover:text-zinc-700"
                 onClick={(e) => {
                   e.preventDefault();
                   // TODO: Implement forgot password functionality
