@@ -1,11 +1,44 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useAuth } from '../context/AuthContext';
-import { User, Mail, Calendar, LogOut, Shield, Settings, Edit3 } from 'lucide-react';
+import { User, Mail, Calendar, LogOut, Shield, Settings, Edit3, Camera } from 'lucide-react';
 import UserIdChangeModal from '../components/UserIdChangeModal';
+import ProfilePhotoUploadModal from '../components/ProfilePhotoUploadModal';
 
 const Dashboard = () => {
-  const { user, logout } = useAuth();
+  const { user, logout, updateUser } = useAuth();
   const [showUserIdModal, setShowUserIdModal] = useState(false);
+  const [showProfilePhotoModal, setShowProfilePhotoModal] = useState(false);
+  const [profilePhotoUrl, setProfilePhotoUrl] = useState(null);
+
+  useEffect(() => {
+    const fetchProfilePhoto = async () => {
+      try {
+        const token = localStorage.getItem('token');
+        const response = await fetch('http://localhost:5000/api/user/profile-photo', {
+          headers: {
+            'Authorization': `Bearer ${token}`
+          }
+        });
+        
+        const data = await response.json();
+        if (data.success && data.data.profilePhoto) {
+          setProfilePhotoUrl(data.data.profilePhoto);
+        }
+      } catch (error) {
+        console.error('Error fetching profile photo:', error);
+      }
+    };
+
+    fetchProfilePhoto();
+  }, []);
+
+  const handleProfilePhotoUpdate = (newPhotoUrl) => {
+    setProfilePhotoUrl(newPhotoUrl);
+    // Update user in context if available
+    if (updateUser) {
+      updateUser({ ...user, profilePhoto: newPhotoUrl });
+    }
+  };
 
   const handleLogout = () => {
     logout();
@@ -27,8 +60,25 @@ const Dashboard = () => {
         <div className="glass-morphism p-8 mb-8">
           <div className="flex flex-col md:flex-row items-center md:items-start space-y-4 md:space-y-0 md:space-x-6">
             {/* Avatar */}
-            <div className="w-24 h-24 bg-zinc-800 rounded-full flex items-center justify-center text-zinc-100 text-3xl font-bold shadow-xl border border-zinc-700">
-              {user?.name?.charAt(0)?.toUpperCase() || 'U'}
+            <div className="relative">
+              <div className="w-24 h-24 bg-zinc-800 rounded-full flex items-center justify-center text-zinc-100 text-3xl font-bold shadow-xl border border-zinc-700 overflow-hidden">
+                {profilePhotoUrl ? (
+                  <img 
+                    src={`http://localhost:5000${profilePhotoUrl}`} 
+                    alt="Profile" 
+                    className="w-full h-full object-cover"
+                  />
+                ) : (
+                  user?.name?.charAt(0)?.toUpperCase() || 'U'
+                )}
+              </div>
+              <button
+                onClick={() => setShowProfilePhotoModal(true)}
+                className="absolute bottom-0 right-0 bg-blue-600 hover:bg-blue-700 text-white p-2 rounded-full transition-colors shadow-lg"
+                title="Change profile photo"
+              >
+                <Camera className="w-4 h-4" />
+              </button>
             </div>
             
             {/* Welcome Message */}
@@ -153,6 +203,14 @@ const Dashboard = () => {
                 <span>Edit Profile</span>
               </button>
               
+              <button 
+                onClick={() => setShowProfilePhotoModal(true)}
+                className="glass-button-secondary w-full flex items-center justify-center space-x-2"
+              >
+                <Camera className="w-4 h-4" />
+                <span>Change Profile Photo</span>
+              </button>
+              
               <button className="glass-button-secondary w-full flex items-center justify-center space-x-2">
                 <Shield className="w-4 h-4" />
                 <span>Security Settings</span>
@@ -209,6 +267,14 @@ const Dashboard = () => {
       <UserIdChangeModal 
         isOpen={showUserIdModal} 
         onClose={() => setShowUserIdModal(false)} 
+      />
+      
+      {/* Profile Photo Upload Modal */}
+      <ProfilePhotoUploadModal
+        isOpen={showProfilePhotoModal}
+        onClose={() => setShowProfilePhotoModal(false)}
+        currentPhoto={profilePhotoUrl}
+        onPhotoUpdate={handleProfilePhotoUpdate}
       />
     </div>
   );

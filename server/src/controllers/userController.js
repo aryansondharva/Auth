@@ -1,6 +1,156 @@
 const { PrismaClient } = require('@prisma/client');
 const { validationResult } = require('express-validator');
+const multer = require('multer');
+const path = require('path');
+const fs = require('fs');
 const prisma = new PrismaClient();
+
+// Configure multer for profile photo uploads
+const storage = multer.diskStorage({
+  destination: function (req, file, cb) {
+    const uploadDir = path.join(__dirname, '..', '..', 'uploads', 'profile-photos');
+    if (!fs.existsSync(uploadDir)) {
+      fs.mkdirSync(uploadDir, { recursive: true });
+    }
+    cb(null, uploadDir);
+  },
+  filename: function (req, file, cb) {
+    const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1E9);
+    cb(null, req.user.id + '-' + uniqueSuffix + path.extname(file.originalname));
+  }
+});
+
+const upload = multer({
+  storage: storage,
+  limits: {
+    fileSize: 5 * 1024 * 1024 // 5MB limit
+  },
+  fileFilter: function (req, file, cb) {
+    const allowedTypes = /jpeg|jpg|png|gif|webp/;
+    const extname = allowedTypes.test(path.extname(file.originalname).toLowerCase());
+    const mimetype = allowedTypes.test(file.mimetype);
+    
+    if (mimetype && extname) {
+      return cb(null, true);
+    } else {
+      cb(new Error('Only image files (JPEG, JPG, PNG, GIF, WebP) are allowed'));
+    }
+  }
+});
+
+const uploadProfilePhoto = async (req, res) => {
+  try {
+    if (!req.file) {
+      return res.status(400).json({
+        success: false,
+        message: 'No file uploaded'
+      });
+    }
+
+    const profilePhotoUrl = `/uploads/profile-photos/${req.file.filename}`;
+    
+    // Update user's profile photo in database
+    const updatedUser = await prisma.user.update({
+      where: { id: req.user.id },
+      data: { profilePhoto: profilePhotoUrl },
+      select: {
+        id: true,
+        name: true,
+        email: true,
+        profilePhoto: true,
+        created_at: true
+      }
+    });
+
+    res.json({
+      success: true,
+      message: 'Profile photo uploaded successfully',
+      data: {
+        user: updatedUser,
+        profilePhotoUrl: profilePhotoUrl
+      }
+    });
+  } catch (error) {
+    console.error('Upload profile photo error:', error);
+    
+    // Delete uploaded file if database update fails
+    if (req.file) {
+      fs.unlinkSync(req.file.path);
+    }
+    
+    res.status(500).json({
+      success: false,
+      message: 'Server error uploading profile photo'
+    });
+  }
+};
+
+const getProfilePhoto = async (req, res) => {
+  try {
+    const user = await prisma.user.findUnique({
+      where: { id: req.user.id },
+      select: { profilePhoto: true }
+    });
+
+    res.json({
+      success: true,
+      data: {
+        profilePhoto: user?.profilePhoto || null
+      }
+    });
+  } catch (error) {
+    console.error('Get profile photo error:', error);
+    res.status(500).json({
+      success: false,
+      message: 'Server error retrieving profile photo'
+    });
+  }
+};
+
+const deleteProfilePhoto = async (req, res) => {
+  try {
+    // Get current user to find the photo path
+    const currentUser = await prisma.user.findUnique({
+      where: { id: req.user.id },
+      select: { profilePhoto: true }
+    });
+
+    if (currentUser?.profilePhoto) {
+      // Delete file from filesystem
+      const filePath = path.join(__dirname, '..', '..', currentUser.profilePhoto);
+      if (fs.existsSync(filePath)) {
+        fs.unlinkSync(filePath);
+      }
+    }
+
+    // Update database to remove photo reference
+    const updatedUser = await prisma.user.update({
+      where: { id: req.user.id },
+      data: { profilePhoto: null },
+      select: {
+        id: true,
+        name: true,
+        email: true,
+        profilePhoto: true,
+        created_at: true
+      }
+    });
+
+    res.json({
+      success: true,
+      message: 'Profile photo removed successfully',
+      data: {
+        user: updatedUser
+      }
+    });
+  } catch (error) {
+    console.error('Delete profile photo error:', error);
+    res.status(500).json({
+      success: false,
+      message: 'Server error removing profile photo'
+    });
+  }
+};
 
 const getUserIdChangeHistory = async (req, res) => {
   try {
@@ -165,5 +315,9 @@ const changeUserId = async (req, res) => {
 
 module.exports = {
   getUserIdChangeHistory,
-  changeUserId
+  changeUserId,
+  uploadProfilePhoto,
+  getProfilePhoto,
+  deleteProfilePhoto,
+  upload // Export multer middleware for use in routes
 };

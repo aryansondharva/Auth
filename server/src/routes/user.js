@@ -1,7 +1,7 @@
 const express = require('express');
 const { body } = require('express-validator');
 const { protect } = require('../middleware/auth');
-const { getUserIdChangeHistory, changeUserId } = require('../controllers/userController');
+const { getUserIdChangeHistory, changeUserId, uploadProfilePhoto, getProfilePhoto, deleteProfilePhoto, upload } = require('../controllers/userController');
 
 const router = express.Router();
 
@@ -19,7 +19,12 @@ const userIdValidation = [
     .withMessage('User ID cannot start with a number')
 ];
 
-// Routes
+// Profile photo routes
+router.get('/profile-photo', getProfilePhoto);
+router.post('/profile-photo', upload.single('profilePhoto'), uploadProfilePhoto);
+router.delete('/profile-photo', deleteProfilePhoto);
+
+// User ID routes
 router.get('/id-change-history', getUserIdChangeHistory);
 router.post('/change-id', userIdValidation, changeUserId);
 
