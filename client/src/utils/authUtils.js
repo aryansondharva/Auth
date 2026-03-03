@@ -11,18 +11,33 @@ export const isTokenExpired = (token) => {
   try {
     const decoded = JSON.parse(atob(token.split('.')[1]));
     const currentTime = Date.now() / 1000;
-    return decoded.exp < currentTime;
+    const isExpired = decoded.exp < currentTime;
+    console.log('isTokenExpired - Token expires at:', new Date(decoded.exp * 1000));
+    console.log('isTokenExpired - Current time:', new Date(currentTime * 1000));
+    console.log('isTokenExpired - Is expired:', isExpired);
+    return isExpired;
   } catch (error) {
+    console.log('isTokenExpired - Error decoding token:', error);
     return true; // If token is malformed, consider it expired
   }
 };
 
 export const getAuthToken = () => {
   const token = localStorage.getItem('token');
-  if (!token || isTokenExpired(token)) {
+  console.log('getAuthToken - Token from localStorage:', !!token);
+  
+  if (!token) {
+    console.log('getAuthToken - No token found');
+    return null;
+  }
+  
+  if (isTokenExpired(token)) {
+    console.log('getAuthToken - Token expired, clearing');
     clearAuthData();
     return null;
   }
+  
+  console.log('getAuthToken - Valid token found');
   return token;
 };
 

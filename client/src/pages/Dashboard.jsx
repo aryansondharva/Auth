@@ -128,24 +128,21 @@ const Dashboard = () => {
                     <span>{user.location}</span>
                   </div>
                 )}
-                
-                {user?.github && (
-                  <div className="flex items-center">
-                    <Github className="w-4 h-4 mr-2 text-zinc-400" />
-                    <a 
-                      href={`https://github.com/${user.github}`} 
-                      target="_blank" 
-                      rel="noopener noreferrer" 
-                      className="text-blue-400 hover:underline"
-                    >
-                      @{user.github}
-                    </a>
-                  </div>
-                )}
               </div>
 
               {/* Social Accounts */}
               <div className="flex space-x-3 mb-4">
+                {user?.github && (
+                  <a 
+                    href={`https://github.com/${user.github}`} 
+                    target="_blank" 
+                    rel="noopener noreferrer" 
+                    className="text-blue-400 hover:text-blue-300 transition-colors"
+                    title="GitHub"
+                  >
+                    <Github className="w-5 h-5" />
+                  </a>
+                )}
                 {user?.twitter && (
                   <a 
                     href={`https://twitter.com/${user.twitter}`} 

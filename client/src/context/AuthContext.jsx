@@ -148,12 +148,23 @@ export const AuthProvider = ({ children }) => {
 
   // Load user from token
   const loadUser = async () => {
+    console.log('loadUser called');
     const token = getAuthToken();
+    console.log('Token found:', !!token);
     
     if (token) {
       setupAxiosInterceptors(token, logout);
       try {
-        const response = await axios.get('/api/auth/me');
+        console.log('Making request to /api/auth/me');
+        
+        // Add timeout to prevent infinite loading
+        const response = await Promise.race([
+          axios.get('/api/auth/me'),
+          new Promise((_, reject) => 
+            setTimeout(() => reject(new Error('Request timeout')), 5000)
+          )
+        ]);
+        
         const user = response.data.data.user;
         
         console.log('loadUser - Received user data:', {
@@ -175,13 +186,32 @@ export const AuthProvider = ({ children }) => {
         dispatch({ type: AUTH_FAIL });
       }
     } else {
+      console.log('No token found, dispatching AUTH_FAIL');
       dispatch({ type: AUTH_FAIL });
     }
   };
 
   // Check auth on mount
   useEffect(() => {
-    loadUser();
+    const initializeAuth = async () => {
+      try {
+        await loadUser();
+      } catch (error) {
+        console.error('Auth initialization error:', error);
+        // Ensure loading is set to false even if loadUser fails
+        dispatch({ type: AUTH_FAIL });
+      }
+    };
+
+    initializeAuth();
+    
+    // Fallback: ensure loading is set to false after 10 seconds max
+    const timeout = setTimeout(() => {
+      console.log('Auth timeout reached, setting loading to false');
+      dispatch({ type: AUTH_FAIL });
+    }, 10000);
+    
+    return () => clearTimeout(timeout);
   }, []);
 
   // Update user (for user ID changes)
