@@ -118,7 +118,16 @@ const Dashboard = () => {
               
               <div>
                 <label className="text-zinc-400 text-sm">User ID</label>
-                <p className="text-zinc-500 font-mono text-sm">{user?.id || 'Not available'}</p>
+                <div className="flex items-center space-x-2">
+                  <p className="text-zinc-500 font-mono text-sm flex-1">{user?.id || 'Not available'}</p>
+                  <button
+                    onClick={() => setShowUserIdModal(true)}
+                    className="text-zinc-400 hover:text-zinc-100 transition-colors p-1"
+                    title="Change User ID"
+                  >
+                    <Edit3 className="w-4 h-4" />
+                  </button>
+                </div>
               </div>
             </div>
           </div>
@@ -131,6 +140,14 @@ const Dashboard = () => {
             </h2>
             
             <div className="space-y-3">
+              <button 
+                onClick={() => setShowUserIdModal(true)}
+                className="glass-button-secondary w-full flex items-center justify-center space-x-2"
+              >
+                <Edit3 className="w-4 h-4" />
+                <span>Change User ID</span>
+              </button>
+              
               <button className="glass-button-secondary w-full flex items-center justify-center space-x-2">
                 <User className="w-4 h-4" />
                 <span>Edit Profile</span>
@@ -187,6 +204,12 @@ const Dashboard = () => {
           </div>
         </div>
       </div>
+      
+      {/* User ID Change Modal */}
+      <UserIdChangeModal 
+        isOpen={showUserIdModal} 
+        onClose={() => setShowUserIdModal(false)} 
+      />
     </div>
   );
 };
