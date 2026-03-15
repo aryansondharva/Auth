@@ -1,4 +1,4 @@
-# Auth System - Modern Authentication & Profile Management
+# Auth System - Modern Authentication & Profile Management Sysytem
 
 A comprehensive authentication system with profile management, social media integration, and real-time features.
 
